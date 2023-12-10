@@ -11,7 +11,9 @@ and with one mobile element in the room using the QR code.
 
 The Smart Room is filled with different data used for applications like ours, as mentioned in canvas we will be using the Web-based API that is available in the Smart Room to access the data thats in there. The API is specifically used to access the data in the Smart Room and to send commands back to the actuators in the room. 
 
+## App Design
 
+The design is made with figma and can be found [here](https://www.figma.com/file/1INVmuHwCh3D0wGTAYFtDu/AR-APP?type=design&node-id=0%3A1&mode=design&t=EEWJhAXmKXIf2EL5-1).
 
 ## Structure and Code Standards
 
