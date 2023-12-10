@@ -10,3 +10,14 @@ and with one mobile element in the room using the QR code.
 - The app can be used to change the state of at least one device in the smart room.
 
 The Smart Room is filled with different data used for applications like ours, as mentioned in canvas we will be using the Web-based API that is available in the Smart Room to access the data thats in there. The API is specifically used to access the data in the Smart Room and to send commands back to the actuators in the room. 
+
+
+
+## Structure and Code Standards
+
+Structure and Code Standards of the project can be found here: [Project Structure](Structure.md)
+
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md)
