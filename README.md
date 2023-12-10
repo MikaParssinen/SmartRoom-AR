@@ -20,4 +20,4 @@ Structure and Code Standards of the project can be found here: [Project Structur
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md)
+This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt)
