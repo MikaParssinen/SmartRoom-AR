@@ -28,7 +28,7 @@ This document outlines the organization of the file structure for the Unity AR s
 ## Important Scripts
 
 - `QRCodeDetector.cs`: Detects QR codes and retrieves the corresponding UID.
-- `OverlayManager.cs`: Creates and updates AR overlays based on data linked to UIDs.
+- `OverlayManager.cs`: Creates and updates AR overlays based on data retrieved from API to.
 - `DynamicOverlay.cs`: Dynamically updates the content of AR overlays based on the smart room data.
 - `APICommunicator.cs`: Handles all communications with the smart room's web-based API, including fetching device data and sending commands.
 
