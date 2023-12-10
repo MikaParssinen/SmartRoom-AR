@@ -1,11 +1,13 @@
 using UnityEngine;
 using ZXing;
 using ZXing.QrCode;
+using ZXing.Mobile;
 
 public class QRReader : MonoBehaviour
 {
     private WebCamTexture camTexture;
     private Rect screenRect;
+    private BarcodeScanner scanner;
 
     void Start()
     {
@@ -17,6 +19,10 @@ public class QRReader : MonoBehaviour
 
         // Skapa en rektangel som täcker hela skärmen
         screenRect = new Rect(0, 0, Screen.width, Screen.height);
+
+        // Skapa en instans av BarcodeScanner
+        scanner = new BarcodeScanner();
+        scanner.Camera = camTexture;
     }
 
     void Update()
@@ -27,14 +33,11 @@ public class QRReader : MonoBehaviour
             // Fånga bildrutan från kameran
             Color32[] data = camTexture.GetPixels32();
 
-            // Skapa en avkodare
-            IBarcodeReader barcodeReader = new BarcodeReader();
-
-            // Få avkodningsresultatet
-            Result result = barcodeReader.Decode(data, camTexture.width, camTexture.height);
+            // Starta skanningen
+            var result = scanner.Scan(data, camTexture.width, camTexture.height);
 
             // Om en QR-kod hittades
-            if (result != null)
+            if (result != null && !string.IsNullOrEmpty(result.Text))
             {
                 Debug.Log("QR Code detected: " + result.Text);
             }
