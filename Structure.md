@@ -38,7 +38,7 @@ This document outlines the organization of the file structure for the Unity AR s
 
 ## Builds
 
-- The Builds folder is intended for storing the compiled versions of the app. It's excluded from version control.
+- The Builds folder is intended for storing the compiled versions of the app.
 
 ## Coding standards
 
