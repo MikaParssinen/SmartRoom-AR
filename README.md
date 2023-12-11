@@ -23,3 +23,9 @@ Structure and Code Standards of the project can be found here: [Project Structur
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt)
+
+## Postman API Platform
+
+For API token and authentication
+
+[Postman](https://www.postman.com/)
