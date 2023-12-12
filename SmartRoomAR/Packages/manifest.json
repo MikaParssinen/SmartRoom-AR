@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.nobi.roundedcorners": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
     "com.unity.collab-proxy": "2.2.0",
     "com.unity.feature.ar": "1.0.1",
     "com.unity.feature.development": "1.0.1",
@@ -8,7 +9,9 @@
     "com.unity.timeline": "1.7.6",
     "com.unity.visualscripting": "1.9.1",
     "com.unity.xr.arcore": "5.1.1",
+    "com.unity.xr.arfoundation": "5.1.1",
     "com.unity.xr.arkit": "5.1.1",
+    "com.unity.xr.magicleap": "7.0.0",
     "com.unity.xr.management": "4.4.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
