@@ -7,15 +7,20 @@ public class AuthenticationManager : MonoBehaviour
     private string apiUrl = "blank"; //Should be replaced with the exact URL to gather the API AUTH token
     private string authTokenKey = "AuthToken";
 
-    void Start()
+    // Call this function from somewhere when you need the authentication token
+    public void AttemptLogin(string username, string password)
     {
-        StartCoroutine(Login());
+        StartCoroutine(Login(username, password));
     }
 
-    IEnumerator Login()
+    IEnumerator Login(string username, string password)
     {
-        // Make a POST-request without sending any credentials and only expecting a Authentication Token
-        using (UnityWebRequest www = UnityWebRequest.Post(apiUrl, ""))
+        // Create a POST request with username and password
+        WWWForm form = new WWWForm();
+        form.AddField("username", username);
+        form.AddField("password", password);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(apiUrl, form))
         {
             yield return www.SendWebRequest();
 
@@ -25,7 +30,7 @@ public class AuthenticationManager : MonoBehaviour
             }
             else
             {
-                //Recieve and gather the credentials for the authentication
+                //Recieve and store the credentials for the authentication
                 string authToken = www.GetResponseHeader("Authorization");
                 PlayerPrefs.SetString(authTokenKey, authToken);
 
