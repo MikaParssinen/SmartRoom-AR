@@ -20,12 +20,18 @@ public class LightBulb : MonoBehaviour
     private Button yellowButton;
     [SerializeField]
     private Button blueButton;
+    [SerializeField]
+    private RectTransform panel;
+    //[SerializeField]
+    private float animationTime = 0.5f;
 
-    public Animator PanelSlider;
+    //public Animator PanelSlider;
     
 
     [SerializeField]
     private bool on = false;
+
+    public CanvasGroup panelCanvasGroup;
 
    
     // Start is called before the first frame update
@@ -37,20 +43,56 @@ public class LightBulb : MonoBehaviour
         blueButton.onClick.AddListener(ChangeToBlue);  
     }
 
+    void Awake()
+    {
+        panelCanvasGroup.alpha = 0;
+    }
+
     void ToggleColors()
     {
         on = !on;
         if (on)
         {
             Debug.Log("Button pressed!!!!");
-            PanelSlider.SetTrigger("PlayAnimation");
+            panelCanvasGroup.alpha = 1;
+            StartTransition();
+            
         }
         else
         {
-            //Här ska animationen för att dra in Panelen köras
-            //PanelSlider.SetTrigger("PlayAnimation");
+            EndTransition();
+            panelCanvasGroup.alpha = 0;
+            
         }
     }
+
+    IEnumerator SlidePanel(RectTransform panel, Vector2 start, Vector2 end, float time)
+    {
+        float elapsedTime = 0;
+        while (elapsedTime < time)
+        {
+            panel.position = Vector2.Lerp(start, end, (elapsedTime / time));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        panel.position = end;
+    }
+
+    private void StartTransition()
+    {
+        Vector2 startPos = lightSwitch.transform.position;
+        Vector2 endPos = startPos - new Vector2(231, 0);
+        StartCoroutine(SlidePanel(panel, startPos, endPos, animationTime));
+    }
+
+    private void EndTransition()
+    {
+        Vector2 endPos = lightSwitch.transform.position;
+        Vector2 startPos = endPos + new Vector2(panel.rect.width, 0);
+        StartCoroutine(SlidePanel(panel, startPos, endPos, animationTime));
+    }
+
+    
 
     void ChangeToRed()
     {
