@@ -982,6 +982,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: APIModalCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1222619355324285377, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
+        type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3258680920197036721, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
         type: 3}
       propertyPath: apiAuth
@@ -1085,6 +1090,16 @@ PrefabInstance:
     - target: {fileID: 4357575176223919992, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5998938735025916879, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
+        type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7989745242238578842, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
+        type: 3}
+      propertyPath: m_fontStyle
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
