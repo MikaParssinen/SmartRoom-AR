@@ -8,12 +8,26 @@ using System.Text;
 
 public class APIAuth : MonoBehaviour
 {
+
+    public static APIAuth Instance { get; private set; }
     private string base64auth;
     private string tempApiKey;
     public bool IsAuthenticated { get; private set;}
 
     public string AuthHeader { get; private set; }
     public string ApiKeyHeader { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
     
 
     public void Authenticate(string username, string password, string apiKey)
@@ -54,11 +68,14 @@ public class APIAuth : MonoBehaviour
                 IsAuthenticated = false;
               }
         }
-
+        
         OnAuthenticationComplete?.Invoke(IsAuthenticated);
         
     }
 
+    
     public event Action<bool> OnAuthenticationComplete;
+
+    
 
 }
