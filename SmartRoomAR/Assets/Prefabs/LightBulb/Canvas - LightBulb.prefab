@@ -262,8 +262,10 @@ MonoBehaviour:
   redButton: {fileID: 2415074925072913816}
   yellowButton: {fileID: 6368631909571249938}
   blueButton: {fileID: 1016734330737499583}
-  PanelSlider: {fileID: 6881916998924892632}
+  panel: {fileID: 0}
   on: 0
+  panelCanvasGroup: {fileID: 0}
+  panelRectTransform: {fileID: 0}
 --- !u!1 &5293205642152793714
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,8 +517,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7720914819312263273}
   - {fileID: 6432374432055966796}
+  - {fileID: 7720914819312263273}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0.375, z: 0}
   m_AnchorMin: {x: 0, y: 0}

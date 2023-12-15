@@ -21,7 +21,7 @@ public class LightBulb : MonoBehaviour
     [SerializeField]
     private Button blueButton;
     [SerializeField]
-    private RectTransform panel;
+    private GameObject panel;
     //[SerializeField]
     private float animationTime = 0.5f;
 
@@ -33,10 +33,15 @@ public class LightBulb : MonoBehaviour
 
     public CanvasGroup panelCanvasGroup;
 
+    public RectTransform panelRectTransform;
+
    
     // Start is called before the first frame update
     void Start()
     {
+        panelRectTransform = panel.GetComponent<RectTransform>();
+        panelRectTransform.sizeDelta = new Vector2(0, panelRectTransform.sizeDelta.y);
+
         lightSwitch.onClick.AddListener(ToggleColors); 
         redButton.onClick.AddListener(ChangeToRed);
         yellowButton.onClick.AddListener(ChangeToYellow);
@@ -45,6 +50,7 @@ public class LightBulb : MonoBehaviour
 
     void Awake()
     {
+         
         panelCanvasGroup.alpha = 0;
     }
 
@@ -56,6 +62,7 @@ public class LightBulb : MonoBehaviour
             Debug.Log("Button pressed!!!!");
             panelCanvasGroup.alpha = 1;
             StartTransition();
+            //on = false;
             
         }
         else
@@ -66,30 +73,48 @@ public class LightBulb : MonoBehaviour
         }
     }
 
-    IEnumerator SlidePanel(RectTransform panel, Vector2 start, Vector2 end, float time)
+
+
+    IEnumerator ChangeWidth(RectTransform panel, float startWidth, float endWidth, float time)
     {
         float elapsedTime = 0;
         while (elapsedTime < time)
         {
-            panel.position = Vector2.Lerp(start, end, (elapsedTime / time));
+            float newWidth = Mathf.Lerp(startWidth, endWidth, (elapsedTime / time));
+            panel.sizeDelta = new Vector2(newWidth, panel.sizeDelta.y);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        panel.position = end;
+        panel.sizeDelta = new Vector2(endWidth, panel.sizeDelta.y);
     }
+
 
     private void StartTransition()
     {
-        Vector2 startPos = lightSwitch.transform.position;
-        Vector2 endPos = startPos - new Vector2(231, 0);
-        StartCoroutine(SlidePanel(panel, startPos, endPos, animationTime));
+        
+        float targetX = 231;
+        LeanTween.moveX(panelRectTransform, 432, 1.5f).setEase(LeanTweenType.easeOutBack);
+        LeanTween.value(gameObject, UpdatePanelWidth, 0, 1000, animationTime).setEase(LeanTweenType.easeOutBack);
+           //float panelWidth = panelRectTransform.rect.width;
+           //float targetX = 231;
+           //LeanTween.moveX(panelRectTransform, targetX, 1.5f).setEase(LeanTweenType.easeOutBack);
+
+        //LeanTween.value(gameObject, UpdatePanelWidth, 0, 300, 1.5f).setEase(LeanTweenType.easeOutBack);
+       
+
+        
+    }
+
+    private void UpdatePanelWidth(float width)
+    {
+        panelRectTransform.sizeDelta = new Vector2(width, panelRectTransform.sizeDelta.y);
     }
 
     private void EndTransition()
     {
-        Vector2 endPos = lightSwitch.transform.position;
-        Vector2 startPos = endPos + new Vector2(panel.rect.width, 0);
-        StartCoroutine(SlidePanel(panel, startPos, endPos, animationTime));
+         //LeanTween.scaleX(panel, 0, 1.5f).setEase(LeanTweenType.easeOutBack);
+        // LeanTween.moveX(panelRectTransform, 0, 1.5f).setEase(LeanTweenType.easeOutBack);
+        LeanTween.value(gameObject, UpdatePanelWidth, 300, 0, 1.5f).setEase(LeanTweenType.easeOutBack);
     }
 
     
@@ -98,18 +123,21 @@ public class LightBulb : MonoBehaviour
     {
         Debug.Log("Changed to red");
         lightSwitch.image.sprite = redLightBulb;
+        EndTransition();
     }
 
     void ChangeToYellow()
     {
         Debug.Log("Changed to yellow");
         lightSwitch.image.sprite = yellowLightBulb;
+        EndTransition();
     }
 
     void ChangeToBlue()
     {
         Debug.Log("Changed to blue");
         lightSwitch.image.sprite = blueLightBulb;
+        EndTransition();
     }
 
 /* Lägga till fler färger i fortsättningen
