@@ -85,8 +85,10 @@ public class QRCodeDetector : MonoBehaviour
                 false);
         }
 
-
+        //Load raw pixel data into the Texture2D
         _cameraImageTexture.LoadRawTextureData(buffer);
+
+       
         _cameraImageTexture.Apply();
 
         buffer.Dispose();
