@@ -99,11 +99,20 @@ public class QRCodeDetector : MonoBehaviour
             _cameraImageTexture.height);
 
         Destroy(_cameraImageTexture);
-        
+
         if (_result != null)
         {
-            _lastResult = _result.Text + " " + _result.BarcodeFormat;
-            Debug.Log(_lastResult);
+
+            string newResult = _result.Text + " " + _result.BarcodeFormat;
+
+            // Check if the new result is different from the previous one
+            if (newResult != _lastResult)
+            {
+                _lastResult = newResult;
+                Debug.Log(_lastResult);
+                // Send the result to other scripts
+               // OnQRCodeDetected?.Invoke(_lastResult);
+            }
         }
 
 
