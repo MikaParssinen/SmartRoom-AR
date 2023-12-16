@@ -42,64 +42,70 @@ public class QRCodeDetector : MonoBehaviour
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
+        // Acquire an XRCpuImage
+        if (!m_CameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
+            return;
+
+        // Set up our conversion params
+        var conversionParams = new XRCpuImage.ConversionParams
         {
-            // Acquire an XRCpuImage
-            if (!m_CameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
-                return;
+            // Convert the entire image
+            inputRect = new RectInt(0, 0, image.width, image.height),
 
-            // Set up our conversion params
-            var conversionParams = new XRCpuImage.ConversionParams
-            {
-                // Convert the entire image
-                inputRect = new RectInt(0, 0, image.width, image.height),
+            // Output at full resolution
+            outputDimensions = new Vector2Int(image.width, image.height),
 
-                // Output at full resolution
-                outputDimensions = new Vector2Int(image.width, image.height),
+            // Convert to RGBA format
+            outputFormat = TextureFormat.RGBA32,
 
-                // Convert to RGBA format
-                outputFormat = TextureFormat.RGBA32,
+            // Flip across the vertical axis (mirror image)
+            transformation = XRCpuImage.Transformation.MirrorY
+        };
 
-                // Flip across the vertical axis (mirror image)
-                transformation = XRCpuImage.Transformation.MirrorY
-            };
+        // See how many bytes we need to store the image  
+        int size = image.GetConvertedDataSize(conversionParams);
 
-            // See how many bytes we need to store the image  
-            int size = image.GetConvertedDataSize(conversionParams);
+        // Allocate a buffer to store the image.
+        var buffer = new NativeArray<byte>(size, Allocator.Temp);
 
-            // Allocate a buffer to store the image.
-            var buffer = new NativeArray<byte>(size, Allocator.Temp);
+        //Extract the data from the image
+        image.Convert(conversionParams, buffer);
 
-            //Extract the data from the image
-            image.Convert(conversionParams, buffer);
+        //Now we dispose the XRCpuImage because we have everything we need in the buffer.
+        image.Dispose();
 
-            //Now we dispose the XRCpuImage because we have everything we need in the buffer.
-            image.Dispose();
 
-            //We now make the Texture2D that we need for the decode section.
+        //We now make the Texture2D that we need for the decode section.
+        if (_cameraImageTexture == null || _cameraImageTexture.width != conversionParams.outputDimensions.x || _cameraImageTexture.height != conversionParams.outputDimensions.y)
+        {
             _cameraImageTexture = new Texture2D(
                 conversionParams.outputDimensions.x,
                 conversionParams.outputDimensions.y,
                 conversionParams.outputFormat,
                 false);
-
-            _cameraImageTexture.LoadRawTextureData(buffer);
-            _cameraImageTexture.Apply();
-
-            buffer.Dispose();
-
-            _result = _barcodeReader.Decode(
-                _cameraImageTexture.GetPixels32(),
-                _cameraImageTexture.width,
-                _cameraImageTexture.height);
-
-            if (_result != null)
-            {
-                _lastResult = _result.Text + " " + _result.BarcodeFormat;
-                Debug.Log(_lastResult);
-            }
-
-
         }
+
+
+        _cameraImageTexture.LoadRawTextureData(buffer);
+        _cameraImageTexture.Apply();
+
+        buffer.Dispose();
+
+        _result = _barcodeReader.Decode(
+            _cameraImageTexture.GetPixels32(),
+            _cameraImageTexture.width,
+            _cameraImageTexture.height);
+
+        Destroy(_cameraImageTexture);
+        
+        if (_result != null)
+        {
+            _lastResult = _result.Text + " " + _result.BarcodeFormat;
+            Debug.Log(_lastResult);
+        }
+
+
+
     }
 }
 
