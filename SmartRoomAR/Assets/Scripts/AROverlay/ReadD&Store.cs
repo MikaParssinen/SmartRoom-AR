@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class SmartRoomData
+public class SmartRoomData : MonoBehaviour
 {
     public string label;
     public string bridgeUID;
@@ -37,7 +37,7 @@ public class SmartRoomData
 
     // Nested classes for proper JSON serialization
     [System.Serializable]
-    public class Configuration
+    public class Configuration : MonoBehaviour
     {
         public object additionalProp1;
         public object additionalProp2;
@@ -45,7 +45,7 @@ public class SmartRoomData
     }
 
     [System.Serializable]
-    public class Properties
+    public class Properties : MonoBehaviour
     {
         public string additionalProp1;
         public string additionalProp2;
@@ -53,7 +53,7 @@ public class SmartRoomData
     }
 
     [System.Serializable]
-    public class Channel
+    public class Channel : MonoBehaviour
     {
         public string uid;
         public string id;
@@ -70,7 +70,7 @@ public class SmartRoomData
     }
 
     [System.Serializable]
-    public class StatusInfo
+    public class StatusInfo : MonoBehaviour
     {
         public string status;
         public string statusDetail;
@@ -78,7 +78,7 @@ public class SmartRoomData
     }
 
     [System.Serializable]
-    public class FirmwareStatus
+    public class FirmwareStatus : MonoBehaviour
     {
         public string status;
         public string updatableVersion;
@@ -126,7 +126,7 @@ public class SmartRoomController : MonoBehaviour
 {
     // Replace colons with URL-encoded equivalent
     string escapedUid = Uri.EscapeDataString(uid.Replace(":", "%3"));
-
+    
     // Modify the URL to include the variable name for the UID
     string fullApiUrl = apiUrl + "?uid=" + escapedUid;
     Debug.Log(fullApiUrl);
