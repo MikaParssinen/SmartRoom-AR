@@ -21,6 +21,14 @@ public class LightBulb : MonoBehaviour
     [SerializeField]
     private Button blueButton;
     [SerializeField]
+
+    private Button greenButton;
+
+    [SerializeField]
+
+    private Button whiteButton;
+
+    [SerializeField]
     private GameObject panel;
     
     private float animationTime = 0.5f;
@@ -46,6 +54,8 @@ public class LightBulb : MonoBehaviour
         redButton.onClick.AddListener(ChangeToRed);
         yellowButton.onClick.AddListener(ChangeToYellow);
         blueButton.onClick.AddListener(ChangeToBlue);  
+        greenButton.onClick.AddListener(changeToGreen);
+        whiteButton.onClick.AddListener(changeToWhite);
     }
 
     void Awake()
@@ -99,7 +109,7 @@ public class LightBulb : MonoBehaviour
         float initialX = 404;
         panelRectTransform.localPosition = new Vector2(initialX, panelRectTransform.localPosition.y);
         LeanTween.moveX(panelRectTransform, 425, 1.5f).setEase(LeanTweenType.easeOutBack);
-        LeanTween.value(gameObject, UpdatePanelWidth, 0, 1000, animationTime).setEase(LeanTweenType.easeOutBack);
+        LeanTween.value(gameObject, UpdatePanelWidth, 0, 2054, animationTime).setEase(LeanTweenType.easeOutBack);
           
        
 
@@ -148,20 +158,24 @@ public class LightBulb : MonoBehaviour
         EndTransition();
     }
 
-/* Lägga till fler färger i fortsättningen
+
     void changeToGreen()
     {
         Debug.Log("Changed to green");
         lightSwitch.image.sprite = greenLightBulb;
+        EndTransition();
     }
 
     void changeToWhite()
     {
-        Debug.Log("Changed to white")
+        Debug.Log("Changed to white");
         lightSwitch.image.sprite = whiteLightBulb;
+        EndTransition();
     }
+
+
+
     // Update is called once per frame
-*/
     void Update()
     {
 
