@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 public class AuthenticationManager : MonoBehaviour
 {
-    private string apiUrl = "blank"; //Should be replaced with the exact URL to gather the API AUTH token
+    private string apiUrl = "blank"; // Replace with the exact URL to gather the API AUTH token
     private string authTokenKey = "AuthToken";
 
     // Call this function from somewhere when you need the authentication token
@@ -30,7 +30,7 @@ public class AuthenticationManager : MonoBehaviour
             }
             else
             {
-                //Recieve and store the credentials for the authentication
+                // Receive and store the credentials for authentication
                 string authToken = www.GetResponseHeader("Authorization");
                 PlayerPrefs.SetString(authTokenKey, authToken);
 
@@ -39,9 +39,18 @@ public class AuthenticationManager : MonoBehaviour
         }
     }
 
-    //This function can be called from any other script that need to get the API authentication
+    // This function can be called from any other script that needs to get the API authentication
     public string GetAuthToken()
     {
-        return PlayerPrefs.GetString(authTokenKey, "");
+        // Access AuthHeader from APIAuth.Instance
+        if (APIAuth.Instance != null)
+        {
+            return APIAuth.Instance.AuthHeader;
+        }
+        else
+        {
+            Debug.LogError("APIAuth instance not found.");
+            return "";
+        }
     }
 }
