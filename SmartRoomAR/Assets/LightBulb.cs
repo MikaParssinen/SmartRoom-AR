@@ -22,10 +22,10 @@ public class LightBulb : MonoBehaviour
     private Button blueButton;
     [SerializeField]
     private GameObject panel;
-    //[SerializeField]
+    
     private float animationTime = 0.5f;
 
-    //public Animator PanelSlider;
+    
     
 
     [SerializeField]
@@ -61,14 +61,18 @@ public class LightBulb : MonoBehaviour
         {
             Debug.Log("Button pressed!!!!");
             panelCanvasGroup.alpha = 1;
+            
             StartTransition();
-            //on = false;
+            blueButton.interactable = true;
+            redButton.interactable = true;
+            yellowButton.interactable = true;
+            
             
         }
         else
         {
             EndTransition();
-            panelCanvasGroup.alpha = 0;
+            //panelCanvasGroup.alpha = 0;
             
         }
     }
@@ -92,14 +96,11 @@ public class LightBulb : MonoBehaviour
     private void StartTransition()
     {
         
-        float targetX = 231;
-        LeanTween.moveX(panelRectTransform, 432, 1.5f).setEase(LeanTweenType.easeOutBack);
+        float initialX = 404;
+        panelRectTransform.localPosition = new Vector2(initialX, panelRectTransform.localPosition.y);
+        LeanTween.moveX(panelRectTransform, 425, 1.5f).setEase(LeanTweenType.easeOutBack);
         LeanTween.value(gameObject, UpdatePanelWidth, 0, 1000, animationTime).setEase(LeanTweenType.easeOutBack);
-           //float panelWidth = panelRectTransform.rect.width;
-           //float targetX = 231;
-           //LeanTween.moveX(panelRectTransform, targetX, 1.5f).setEase(LeanTweenType.easeOutBack);
-
-        //LeanTween.value(gameObject, UpdatePanelWidth, 0, 300, 1.5f).setEase(LeanTweenType.easeOutBack);
+          
        
 
         
@@ -112,9 +113,16 @@ public class LightBulb : MonoBehaviour
 
     private void EndTransition()
     {
-         //LeanTween.scaleX(panel, 0, 1.5f).setEase(LeanTweenType.easeOutBack);
-        // LeanTween.moveX(panelRectTransform, 0, 1.5f).setEase(LeanTweenType.easeOutBack);
-        LeanTween.value(gameObject, UpdatePanelWidth, 300, 0, 1.5f).setEase(LeanTweenType.easeOutBack);
+
+         
+        float finalX = 404; 
+        LeanTween.moveX(panelRectTransform, finalX, 1.5f).setEase(LeanTweenType.easeInBack);
+        StartCoroutine(ChangeWidth(panelRectTransform, panelRectTransform.rect.width, 0, animationTime));
+        LeanTween.alphaCanvas(panel.GetComponent<CanvasGroup>(), 0, 0.01f).setEase(LeanTweenType.easeInBack);
+        yellowButton.interactable = false;
+        redButton.interactable = false;
+        blueButton.interactable = false;
+        
     }
 
     
@@ -130,7 +138,7 @@ public class LightBulb : MonoBehaviour
     {
         Debug.Log("Changed to yellow");
         lightSwitch.image.sprite = yellowLightBulb;
-        EndTransition();
+       EndTransition();
     }
 
     void ChangeToBlue()
