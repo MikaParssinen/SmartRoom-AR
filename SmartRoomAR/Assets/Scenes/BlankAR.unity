@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 422218014}
-  m_IndirectSpecularColor: {r: 0.4439372, g: 0.49315345, b: 0.5721989, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -617,6 +617,50 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &901520870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 901520872}
+  - component: {fileID: 901520871}
+  m_Layer: 0
+  m_Name: APICommandSender
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &901520871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901520870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02b81a3da4b880140ad2be3b6a6911ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &901520872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901520870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 487.16034, y: 454.04303, z: 1681.1732}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1354141925
 GameObject:
   m_ObjectHideFlags: 0
@@ -902,6 +946,11 @@ PrefabInstance:
       propertyPath: apiAuth
       value: 
       objectReference: {fileID: 158153889}
+    - target: {fileID: 3258680920197036721, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
+        type: 3}
+      propertyPath: apiLampToggler
+      value: 
+      objectReference: {fileID: 901520871}
     - target: {fileID: 4357575176223919992, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1002,6 +1051,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4767287692761494629, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4767287692761494629, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4767287692761494629, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5998938735025916879, guid: a5bf07a07cd06884fbbc4ce1e1d13b31,
         type: 3}
       propertyPath: m_fontStyle
@@ -1028,3 +1092,4 @@ SceneRoots:
   - {fileID: 1907491841}
   - {fileID: 523069992888290795}
   - {fileID: 158153890}
+  - {fileID: 901520872}
