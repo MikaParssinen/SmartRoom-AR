@@ -20,6 +20,8 @@ public class APIModalStateHandler : MonoBehaviour
     [SerializeField] private Image failedAnimationImage, successAnimationImage;
     [SerializeField] private GameObject loadingAnimation;
 
+    public APIAuth apiAuth;
+
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
@@ -121,12 +123,21 @@ public class APIModalStateHandler : MonoBehaviour
     public void ConfirmButtonPressed()
     {
         SetState(APIModalState.Loading);
-        //After 2 seconds, set state to success
-        StartCoroutine(WaitAndSetState(APIModalState.Success, 2f));
+        apiAuth.Authenticate(usernameInputField.text, passwordInputField.text, apiKeyInputField.text);
+        apiAuth.OnAuthenticationComplete += HandleAuthResult;
         
+    }
 
-
-
+    private void HandleAuthResult(bool result)
+    {
+        if (result)
+        {
+            SetState(APIModalState.Success);
+        }
+        else
+        {
+            SetState(APIModalState.Failed);
+        }
     }
 
     public void TryAgainButtonPressed()
