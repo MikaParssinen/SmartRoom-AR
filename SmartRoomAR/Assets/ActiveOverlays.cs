@@ -14,6 +14,11 @@ public class ActiveOverlays : MonoBehaviour
 
     [SerializeField]
     private GameObject overlayPanel;
+
+    [SerializeField]
+    private GameObject overlayDataPrefab;
+
+    
     public RectTransform overlayPanelRectTransform;
 
 
@@ -37,11 +42,22 @@ public class ActiveOverlays : MonoBehaviour
     {
         if(data.Length == 0 || data == null)
         {
+            Debug.Log("No overlays to initiate");
             return;
         }
         else
         {
+            StartTransition();
             activeOverlays = data;
+
+            Transform content = overlayPanelRectTransform.Find("ScrollView/Viewport/Content");
+            Debug.Log("Active overlays length: " + activeOverlays.Length);
+            foreach(string overlay in activeOverlays)
+            {
+                GameObject instance = Instantiate(overlayDataPrefab, content);
+                instance.GetComponentInChildren<Text>().text = overlay;
+                Debug.Log("Instantiated prefab: " + overlay);
+            }
         }
 
     }
@@ -52,7 +68,11 @@ public class ActiveOverlays : MonoBehaviour
 
     private void StartTransition()
     {
-        
+        RectTransform rectTransform = overlayPanel.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -2000);
+
+        // Move the panel to the center of the screen
+        LeanTween.moveY(rectTransform, -200, 1.5f).setEase(LeanTweenType.easeOutBack);
     }
     
     // Start is called before the first frame update
@@ -60,6 +80,7 @@ public class ActiveOverlays : MonoBehaviour
     {   
         overlayPanelRectTransform = overlayPanel.GetComponent<RectTransform>();
         overlayButton.onClick.AddListener(OnClick);
+        InitiateOverlays(new string[] { "Overlay1", "Overlay2", "Overlay3" });
         //Denna rad gör invoken möjlig!
         //OtherClass.OnActiveOverlaysChanged += InitiateOverlays;
         
