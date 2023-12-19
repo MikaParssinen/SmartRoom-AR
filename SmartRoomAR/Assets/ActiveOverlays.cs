@@ -40,7 +40,7 @@ public class ActiveOverlays : MonoBehaviour
     */
     private void InitiateOverlays(string[] data)
     {
-        if(data.Length == 0 || data == null)
+        if(data == null || data.Length == 0)
         {
             Debug.Log("No overlays to initiate");
             return;
@@ -50,12 +50,15 @@ public class ActiveOverlays : MonoBehaviour
             StartTransition();
             activeOverlays = data;
 
-            Transform content = overlayPanelRectTransform.Find("ScrollView/Viewport/Content");
+            Transform content = overlayPanelRectTransform.Find("Scroll View/Viewport/Content");
             Debug.Log("Active overlays length: " + activeOverlays.Length);
             foreach(string overlay in activeOverlays)
             {
+                Debug.Log("Is here: " + overlay);
                 GameObject instance = Instantiate(overlayDataPrefab, content);
-                instance.GetComponentInChildren<Text>().text = overlay;
+                Debug.Log("Is here: " + overlay);
+                instance.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = overlay;
+                Debug.Log("Is here: " + overlay);
                 Debug.Log("Instantiated prefab: " + overlay);
             }
         }
