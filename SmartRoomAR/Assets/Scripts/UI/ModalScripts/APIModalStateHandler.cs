@@ -22,6 +22,8 @@ public class APIModalStateHandler : MonoBehaviour
 
     public APIAuth apiAuth;
 
+ 
+
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
@@ -125,6 +127,8 @@ public class APIModalStateHandler : MonoBehaviour
         SetState(APIModalState.Loading);
         apiAuth.Authenticate(usernameInputField.text, passwordInputField.text, apiKeyInputField.text);
         apiAuth.OnAuthenticationComplete += HandleAuthResult;
+
+        
         
     }
 
@@ -148,8 +152,10 @@ public class APIModalStateHandler : MonoBehaviour
     public void CloseButtonPressed()
     {
         //Transition out then destroy
+        
         EndTransition();
         StartCoroutine(WaitAndDeactivate(2f));
+
         
     }
 
