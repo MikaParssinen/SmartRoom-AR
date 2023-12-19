@@ -1,163 +1,83 @@
-using System.Collections;
-using System;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections.Generic;
+using System;
+using System.Collections;
 
-[System.Serializable]
-public class SmartRoomData : MonoBehaviour
+
+public class UIDHandler : MonoBehaviour
 {
-    public string label;
-    public string bridgeUID;
-    public Configuration configuration;
-    public Properties properties;
-    public string UID;
-    public string thingTypeUID;
-    public string location;
-    public List<Channel> channels;
-    public StatusInfo statusInfo;
-    public FirmwareStatus firmwareStatus;
-    public bool editable;
+    // Reference to the QRCodeDetector script
+    public QRCodeDetector qrCodeDetector;
 
-    // Constructor to initialize the properties
-    public SmartRoomData(string label, string bridgeUID, Configuration configuration, Properties properties, string UID, string thingTypeUID, string location, List<Channel> channels, StatusInfo statusInfo, FirmwareStatus firmwareStatus, bool editable)
+    // Reference to the ApiManager script
+    public ApiManager apiManager;
+
+    private void OnEnable()
     {
-        this.label = label;
-        this.bridgeUID = bridgeUID;
-        this.configuration = configuration;
-        this.properties = properties;
-        this.UID = UID;
-        this.thingTypeUID = thingTypeUID;
-        this.location = location;
-        this.channels = channels;
-        this.statusInfo = statusInfo;
-        this.firmwareStatus = firmwareStatus;
-        this.editable = editable;
+        // Subscribe to the QR code detection event
+        qrCodeDetector.OnQRCodeDetected += HandleQRCodeDetected;
     }
 
-    // Nested classes for proper JSON serialization
-    [System.Serializable]
-    public class Configuration : MonoBehaviour
+    private void OnDisable()
     {
-        public object additionalProp1;
-        public object additionalProp2;
-        public object additionalProp3;
+        // Unsubscribe from the QR code detection event
+        qrCodeDetector.OnQRCodeDetected -= HandleQRCodeDetected;
     }
 
-    [System.Serializable]
-    public class Properties : MonoBehaviour
+    private void HandleQRCodeDetected(string uid)
     {
-        public string additionalProp1;
-        public string additionalProp2;
-        public string additionalProp3;
+        uid = "zwave:device:e804a908f8:node14";
+        string transformedUid = TransformUid(uid);
+
+        // Send the transformed UID to the API manager for further processing
+        apiManager.SendRequest(transformedUid);
     }
 
-    [System.Serializable]
-    public class Channel : MonoBehaviour
+    private string TransformUid(string uid)
     {
-        public string uid;
-        public string id;
-        public string channelTypeUID;
-        public string itemType;
-        public string kind;
-        public string label;
-        public string description;
-        public List<string> defaultTags;
-        public Properties properties;
-        public Configuration configuration;
-        public string autoUpdatePolicy;
-        public List<string> linkedItems;
+        // Replace ":" with "%3"
+        return uid.Replace(":", "%3A");
     }
 
-    [System.Serializable]
-    public class StatusInfo : MonoBehaviour
+    public class ApiManager : MonoBehaviour
     {
-        public string status;
-        public string statusDetail;
-        public string description;
-    }
+        private const string apiUrl = "https://home.myopenhab.org/rest/things/";
 
-    [System.Serializable]
-    public class FirmwareStatus : MonoBehaviour
-    {
-        public string status;
-        public string updatableVersion;
-    }
-}
-
-
-public class SmartRoomController : MonoBehaviour
-{
-    private string apiUrl = "https://home.myopenhab.org/rest/things/";
-    public event Action<string, SmartRoomData> OnSmartRoomDataReceived;
-
-    void Start()
-    {
-        /*QRCodeDetector qrCodeDetector = FindObjectOfType<QRCodeDetector>();
-        if (qrCodeDetector != null)
+        public void SendRequest(string uid)
         {
-            qrCodeDetector.OnQRCodeDetected += HandleQRCodeDetected;
+            StartCoroutine(GetDeviceInfo(uid));
         }
-        else
+
+        IEnumerator GetDeviceInfo(string uid)
         {
-            Debug.LogError("QRCodeDetector not found in the scene.");
-        }*/
-    }
+            string requestUrl = $"{apiUrl}?uid={uid}";
+            Debug.Log("The full url is: " + requestUrl);
 
-    private void SendCommandToSmartDevice(string uid, string command)
-    {
-        // Implement the logic to send a command to the smart device
-        // You can use the uid and command parameters to send the appropriate command
-        Debug.Log($"Sending command to device {uid}: {command}");
-        // Add your implementation here
-    }
-    // Event handler for QR code detection
-    private void HandleQRCodeDetected(string qrCodeData)
-    {
-        // Parse the QR code data and extract the UID
-        string[] parts = qrCodeData.Split(':');
-        string uid = parts[2];
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(requestUrl))
+            {
+                yield return webRequest.SendWebRequest();
 
-        // Use the UID to call the API and get device information
-        StartCoroutine(GetSmartRoomData(uid));
-    }
+                if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                    webRequest.result == UnityWebRequest.Result.ProtocolError)
+                {
+                    Debug.LogError($"Error: {webRequest.error}");
+                }
+                else
+                {
+                    // Parse and use the response data as needed
+                    string responseData = webRequest.downloadHandler.text;
+                    Debug.Log($"API Response: {responseData}");
 
-   IEnumerator GetSmartRoomData(string uid)
-{
-    // Replace colons with URL-encoded equivalent
-    string escapedUid = Uri.EscapeDataString(uid.Replace(":", "%3"));
-    
-    // Modify the URL to include the variable name for the UID
-    string fullApiUrl = apiUrl + "?uid=" + escapedUid;
-    Debug.Log(fullApiUrl);
-
-    using (UnityWebRequest www = UnityWebRequest.Get(fullApiUrl))
-    {
-        yield return www.SendWebRequest();
-
-        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-        {
-            Debug.LogError("Error: " + www.error);
+                    // Now you can send this data to other scripts or handle it accordingly
+                    HandleApiData(responseData);
+                }
+            }
         }
-        else
+
+        private void HandleApiData(string responseData)
         {
-            string jsonResponse = www.downloadHandler.text;
-            SmartRoomData smartRoomData = JsonUtility.FromJson<SmartRoomData>(jsonResponse);
-
-            // Trigger the event when data is received, passing both uid and data
-            OnSmartRoomDataReceived?.Invoke(uid, smartRoomData);
-
-            // Update UI and send command as needed
-            UpdateUI(smartRoomData);
-            SendCommandToSmartDevice(uid, "on");
+            // Implement logic to handle the API response data here
+            //parse the data and use it as needed
         }
-    }
-}
-
-    void UpdateUI(SmartRoomData data)
-    {
-        Debug.Log("Device ID: " + data.UID);
-        Debug.Log("Device Type: " + data.thingTypeUID);
-        Debug.Log("Label: " + data.label);
     }
 }
