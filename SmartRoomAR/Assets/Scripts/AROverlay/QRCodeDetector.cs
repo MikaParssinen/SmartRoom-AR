@@ -4,7 +4,7 @@ using UnityEngine.XR.ARSubsystems;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using System;
-
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Collections;
 
 public class QRCodeDetector : MonoBehaviour
@@ -15,8 +15,6 @@ public class QRCodeDetector : MonoBehaviour
     private string _lastResult;
 
     private Texture2D _cameraImageTexture;
-
-    public event Action<string> OnQRCodeDetected;
 
     private IBarcodeReader _barcodeReader = new BarcodeReader
     {
@@ -48,7 +46,7 @@ public class QRCodeDetector : MonoBehaviour
         if (!m_CameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
             return;
 
-        // Set up our conversion paramameters
+        // Set up our conversion params
         var conversionParams = new XRCpuImage.ConversionParams
         {
             // Convert the entire image
@@ -105,7 +103,7 @@ public class QRCodeDetector : MonoBehaviour
         if (_result != null)
         {
 
-            string newResult = _result.Text;
+            string newResult = _result.Text + " " + _result.BarcodeFormat;
 
             // Check if the new result is different from the previous one
             if (newResult != _lastResult)
@@ -113,15 +111,13 @@ public class QRCodeDetector : MonoBehaviour
                 _lastResult = newResult;
                 Debug.Log(_lastResult);
                 // Send the result to other scripts
-                OnQRCodeDetected?.Invoke(_lastResult);
+               // OnQRCodeDetected?.Invoke(_lastResult);
             }
         }
 
 
 
     }
-
-
 }
 
 

@@ -262,10 +262,7 @@ MonoBehaviour:
   redButton: {fileID: 2415074925072913816}
   yellowButton: {fileID: 6368631909571249938}
   blueButton: {fileID: 1016734330737499583}
-  greenButton: {fileID: 0}
-  whiteButton: {fileID: 0}
   panel: {fileID: 0}
-  aPILampToggle: {fileID: 6783385551960149742}
   on: 0
   panelCanvasGroup: {fileID: 0}
   panelRectTransform: {fileID: 0}
@@ -489,50 +486,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &7397454202027735226
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4534059097094332531}
-  - component: {fileID: 6783385551960149742}
-  m_Layer: 0
-  m_Name: APICommandSender
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4534059097094332531
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7397454202027735226}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 245.19019, y: -604.40735, z: 0}
-  m_LocalScale: {x: 0.213284, y: 0.7246377, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5788102285010578628}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6783385551960149742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7397454202027735226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9115e320aee36a54d82ab0ea2f441696, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8304969465429126972
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,7 +519,6 @@ RectTransform:
   m_Children:
   - {fileID: 6432374432055966796}
   - {fileID: 7720914819312263273}
-  - {fileID: 4534059097094332531}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0.375, z: 0}
   m_AnchorMin: {x: 0, y: 0}
