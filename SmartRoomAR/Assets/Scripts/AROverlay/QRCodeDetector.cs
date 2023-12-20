@@ -15,6 +15,12 @@ public class QRCodeDetector : MonoBehaviour
     private string _lastResult;
 
     private Texture2D _cameraImageTexture;
+    private NativeArray<byte> _buffer;
+    private bool _bufferIsInitialized = false;
+
+
+
+
 
     public event Action<string> OnQRCodeDetected;
 
@@ -23,12 +29,19 @@ public class QRCodeDetector : MonoBehaviour
         AutoRotate = false,
         Options = new ZXing.Common.DecodingOptions
         {
+            PossibleFormats = new System.Collections.Generic.List<ZXing.BarcodeFormat>
+            {
+                ZXing.BarcodeFormat.QR_CODE //Checks for QR codes only.
+            },
+
             TryHarder = false
         }
     };
 
-    private Result _result;
 
+
+    private float _frameProcessInterval = 1.0f; //Scans an frame every 1 sec
+    private float _lastFrameProcessedTime = 0.0f;
 
 
     private void OnEnable()
@@ -38,15 +51,33 @@ public class QRCodeDetector : MonoBehaviour
     private void OnDisable()
     {
         m_CameraManager.frameReceived -= OnCameraFrameReceived;
+        if (_bufferIsInitialized)
+        {
+            _buffer.Dispose();
+            _bufferIsInitialized = false;
+        }
+        if (_cameraImageTexture != null)
+        {
+            Destroy(_cameraImageTexture);
+            _cameraImageTexture = null;
+        }
     }
 
 
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
+        if (Time.time - _lastFrameProcessedTime < _frameProcessInterval)
+            return;
+
+        _lastFrameProcessedTime = Time.time;
+
+        Debug.Log("We try to see an QR code");
+
         // Acquire an XRCpuImage
         if (!m_CameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
             return;
+
 
         // Set up our conversion paramameters
         var conversionParams = new XRCpuImage.ConversionParams
@@ -67,60 +98,76 @@ public class QRCodeDetector : MonoBehaviour
         // See how many bytes we need to store the image  
         int size = image.GetConvertedDataSize(conversionParams);
 
-        // Allocate a buffer to store the image.
-        var buffer = new NativeArray<byte>(size, Allocator.Temp);
-
-        //Extract the data from the image
-        image.Convert(conversionParams, buffer);
-
-        //Now we dispose the XRCpuImage because we have everything we need in the buffer.
-        image.Dispose();
-
-
-        //We now make the Texture2D that we need for the decode section.
-        if (_cameraImageTexture == null || _cameraImageTexture.width != conversionParams.outputDimensions.x || _cameraImageTexture.height != conversionParams.outputDimensions.y)
+        try
         {
-            _cameraImageTexture = new Texture2D(
-                conversionParams.outputDimensions.x,
-                conversionParams.outputDimensions.y,
-                conversionParams.outputFormat,
-                false);
-        }
-
-        //Load raw pixel data into the Texture2D
-        _cameraImageTexture.LoadRawTextureData(buffer);
-
-       
-        _cameraImageTexture.Apply();
-
-        buffer.Dispose();
-
-        _result = _barcodeReader.Decode(
-            _cameraImageTexture.GetPixels32(),
-            _cameraImageTexture.width,
-            _cameraImageTexture.height);
-
-        Destroy(_cameraImageTexture);
-
-        if (_result != null)
-        {
-
-            string newResult = _result.Text;
-
-            // Check if the new result is different from the previous one
-            if (newResult != _lastResult)
+            // Allocate a buffer to store the image.
+            if (!_bufferIsInitialized || _buffer.Length != size)
             {
-                _lastResult = newResult;
+                if (_bufferIsInitialized) _buffer.Dispose();
+                _buffer = new NativeArray<byte>(size, Allocator.Temp);
+                _bufferIsInitialized = true;
+            }
+
+            //Extract the data from the image
+            image.Convert(conversionParams, _buffer);
+
+
+            //We now make the Texture2D that we need for the decode section.
+            if (_cameraImageTexture == null || _cameraImageTexture.width != conversionParams.outputDimensions.x || _cameraImageTexture.height != conversionParams.outputDimensions.y)
+            {
+
+                Destroy(_cameraImageTexture);
+
+                _cameraImageTexture = new Texture2D(
+                    conversionParams.outputDimensions.x,
+                    conversionParams.outputDimensions.y,
+                    conversionParams.outputFormat,
+                    false);
+            }
+
+            //Load raw pixel data into the Texture2D
+            _cameraImageTexture.LoadRawTextureData(_buffer);
+            _cameraImageTexture.Apply();
+
+
+            Result _result = _barcodeReader.Decode(
+               _cameraImageTexture.GetPixels32(),
+               _cameraImageTexture.width,
+               _cameraImageTexture.height);
+
+            Destroy(_cameraImageTexture);
+
+
+            if (_result != null && _result.Text != _lastResult)
+            {
+
+                _lastResult = _result.Text;
+
+
+                _lastResult = _result.Text;
                 Debug.Log(_lastResult);
                 // Send the result to other scripts
                 OnQRCodeDetected?.Invoke(_lastResult);
+
             }
         }
+        finally
+        {
+            image.Dispose();
+            if (_bufferIsInitialized)
+            {
+                _buffer.Dispose();
+                _bufferIsInitialized = false;
+            }
+            if (_cameraImageTexture != null)
+            {
+                Destroy(_cameraImageTexture);
+                _cameraImageTexture = null;
+            }
 
-
+        }
 
     }
-
 
 }
 
