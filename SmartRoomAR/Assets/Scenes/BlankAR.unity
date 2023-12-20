@@ -3706,7 +3706,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4228,6 +4228,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1443254566}
+  - component: {fileID: 1443254567}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -4251,9 +4252,35 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -98, y: 99.9997}
+  m_AnchoredPosition: {x: -98, y: 99.99999}
   m_SizeDelta: {x: 196, y: 300}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &1443254567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443254565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 40
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 1
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1444416490
 GameObject:
   m_ObjectHideFlags: 0
@@ -4505,8 +4532,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1297191804}
   m_HandleRect: {fileID: 1297191803}
   m_Direction: 2
-  m_Value: 1.0000031
-  m_Size: 0.6657117
+  m_Value: 1
+  m_Size: 0.6647746
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4915,7 +4942,7 @@ MonoBehaviour:
   activeOverlays: []
   overlayButton: {fileID: 1716497638}
   overlayPanel: {fileID: 1247417550}
-  overlayDataPrefab: {fileID: 2819509675177874215, guid: df412b824b7674ba99d23f3ef55da959,
+  overlayDataPrefab: {fileID: 7155983679413107796, guid: 5e8eeb5f680a2454f860af97059aeaf6,
     type: 3}
   overlayPanelRectTransform: {fileID: 1247417551}
 --- !u!114 &1716497638

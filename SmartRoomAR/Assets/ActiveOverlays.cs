@@ -7,7 +7,7 @@ public class ActiveOverlays : MonoBehaviour
 {
     [SerializeField]
 
-    private string[] activeOverlays;
+    private string[] activeOverlays; 
 
     [SerializeField]
     private Button overlayButton;
@@ -47,20 +47,21 @@ public class ActiveOverlays : MonoBehaviour
         }
         else
         {
-            StartTransition();
+            
             activeOverlays = data;
 
             Transform content = overlayPanelRectTransform.Find("Scroll View/Viewport/Content");
             Debug.Log("Active overlays length: " + activeOverlays.Length);
             foreach(string overlay in activeOverlays)
             {
-                Debug.Log("Is here: " + overlay);
-                GameObject instance = Instantiate(overlayDataPrefab, content);
-                Debug.Log("Is here: " + overlay);
+                GameObject instance = Instantiate(overlayDataPrefab);
+                instance.transform.SetParent(content, false);
+                instance.transform.localScale = new Vector3(0.1f, 0.01f, 0.01f); // Set the scale of the prefab
+                instance.transform.localPosition = Vector3.zero; // Set the local position of the prefab
                 instance.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = overlay;
-                Debug.Log("Is here: " + overlay);
-                Debug.Log("Instantiated prefab: " + overlay);
+
             }
+            StartTransition();
         }
 
     }
