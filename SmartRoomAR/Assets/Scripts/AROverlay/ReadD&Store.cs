@@ -26,7 +26,6 @@ public class UIDHandler : MonoBehaviour
 
     private void HandleQRCodeDetected(string uid)
     {
-        uid = "zwave:device:e804a908f8:node14";
         string transformedUid = TransformUid(uid);
 
         // Send the transformed UID to the API manager for further processing
@@ -42,7 +41,7 @@ public class UIDHandler : MonoBehaviour
     public class ApiManager : MonoBehaviour
     {
         private const string apiUrl = "https://home.myopenhab.org/rest/things/";
-
+        public APIAuth apiAuth;
         public void SendRequest(string uid)
         {
             StartCoroutine(GetDeviceInfo(uid));
@@ -55,6 +54,7 @@ public class UIDHandler : MonoBehaviour
 
             using (UnityWebRequest webRequest = UnityWebRequest.Get(requestUrl))
             {
+                //webRequest.SetRequestHeader("UID", uid);
                 yield return webRequest.SendWebRequest();
 
                 if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
@@ -68,7 +68,7 @@ public class UIDHandler : MonoBehaviour
                     string responseData = webRequest.downloadHandler.text;
                     Debug.Log($"API Response: {responseData}");
 
-                    // Now you can send this data to other scripts or handle it accordingly
+                    //send this data to other scripts or handle it accordingly
                     HandleApiData(responseData);
                 }
             }
