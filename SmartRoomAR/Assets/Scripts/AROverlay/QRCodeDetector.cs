@@ -19,10 +19,7 @@ public class QRCodeDetector : MonoBehaviour
     private bool _bufferIsInitialized = false;
 
 
-
-
-
-    public event Action<string> OnQRCodeDetected;
+    public event Action<string, Vector2> OnQRCodeDetected;
 
     private IBarcodeReader _barcodeReader = new BarcodeReader
     {
@@ -72,7 +69,7 @@ public class QRCodeDetector : MonoBehaviour
 
         _lastFrameProcessedTime = Time.time;
 
-        Debug.Log("We try to see an QR code");
+        
 
         // Acquire an XRCpuImage
         if (!m_CameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
@@ -143,11 +140,12 @@ public class QRCodeDetector : MonoBehaviour
 
                 _lastResult = _result.Text;
 
+                Vector2 _qrCodeScreenPos = CalculateQRCodeScreenPosition(_result, image.width, image.height);
 
-                _lastResult = _result.Text;
+                Debug.Log(_qrCodeScreenPos);
                 Debug.Log(_lastResult);
                 // Send the result to other scripts
-                OnQRCodeDetected?.Invoke(_lastResult);
+                OnQRCodeDetected?.Invoke(_lastResult, _qrCodeScreenPos);
 
             }
         }
@@ -167,6 +165,28 @@ public class QRCodeDetector : MonoBehaviour
 
         }
 
+    }
+
+    private Vector2 CalculateQRCodeScreenPosition(Result result, int imageWidth, int imageHeight)
+    {
+        var points = result.ResultPoints;
+        float x = 0f;
+        float y = 0f;
+
+        foreach (var point in points)
+        {
+            x += point.X;
+            y += point.Y;
+        }
+
+        x /= points.Length;
+        y /= points.Length;
+
+        // Convert to screen space
+        x = x / imageWidth * Screen.width;
+        y = (1 - y / imageHeight) * Screen.height; // Inverting y as screen coordinates are flipped
+
+        return new Vector2(x, y);
     }
 
 }
