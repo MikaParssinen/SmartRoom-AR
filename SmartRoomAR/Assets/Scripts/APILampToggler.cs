@@ -95,7 +95,7 @@ public class APILampToggler : MonoBehaviour
     private IEnumerator SendTurnOnCommand()
     {
         //Post request to openhab API that takes the payload as string in the body
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(apiUrlTurnOn, ""))
+        using (UnityWebRequest www = UnityWebRequest.Post(apiUrlTurnOn, ""))
         {
             //Set headers
             www.SetRequestHeader("Authorization", APIAuth.Instance.AuthHeader);
@@ -133,7 +133,7 @@ public class APILampToggler : MonoBehaviour
     private IEnumerator SendTurnOffCommand()
     {
         //Post request to openhab API that takes the payload as string in the body
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(apiUrlTurnOff, ""))
+        using (UnityWebRequest www = UnityWebRequest.Post(apiUrlTurnOff, ""))
         {
             //Set headers
             www.SetRequestHeader("Authorization", APIAuth.Instance.AuthHeader);
@@ -170,7 +170,7 @@ public class APILampToggler : MonoBehaviour
     private IEnumerator SendSetColourCommand(string payload)
     {
         //Post request to openhab API that takes the payload as string in the body
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(apiUrlChangeColour, ""))
+        using (UnityWebRequest www = UnityWebRequest.Post(apiUrlChangeColour, ""))
         {
             //Set headers
             www.SetRequestHeader("Authorization", APIAuth.Instance.AuthHeader);

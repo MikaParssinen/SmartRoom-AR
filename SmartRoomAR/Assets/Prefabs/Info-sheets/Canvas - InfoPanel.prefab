@@ -331,7 +331,6 @@ MonoBehaviour:
   activated: 0
   title: {fileID: 8027468774541681210}
   container: {fileID: 8027468774541681210}
-  PanelSlider: {fileID: 4423767123054251721}
 --- !u!95 &4423767123054251721
 Animator:
   serializedVersion: 5
