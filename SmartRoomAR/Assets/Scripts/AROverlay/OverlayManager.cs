@@ -7,20 +7,22 @@ public class OverlayManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Subscribe to the event in ReadAndStore that signals a new QR code detection
-        readAndStore.GetDeviceInfo += HandleQRCodeDetected;
+        // Subscribe to the event in UIDHandler that signals new device information
+        UIDHandler.OnDeviceInfoReceived += HandleDeviceInfoReceived;
     }
 
     private void OnDisable()
     {
         // Unsubscribe from the event when this script is disabled
-        readAndStore.GetDeviceInfo -= HandleQRCodeDetected;
+        UIDHandler.OnDeviceInfoReceived -= HandleDeviceInfoReceived;
     }
 
-    private void HandleQRCodeDetected(string uid)
+    private void HandleDeviceInfoReceived(string uid, DeviceProperties deviceProperties)
     {
-        string additionalInfo = readAndStore.GetAdditionalInfo(uid);
-
+        // Handle the received device information
+        string additionalInfo = $"{deviceProperties.status}, {deviceProperties.color}, {deviceProperties.runtime}";
+        
+        // Update the UI or perform any other actions
         ActivateInfoPanel("Title", additionalInfo);
     }
 
