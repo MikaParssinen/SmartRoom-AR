@@ -18,7 +18,12 @@ public class BuildARFromQRCode : MonoBehaviour
 
         if(qrCodeDetector != null)
         {
+            Debug.Log("Trying to PlaceObject");
             qrCodeDetector.OnQRCodeDetected += PlaceObjectInAR;
+        }
+        else
+        {
+            Debug.Log("qrCodeDetector is null");
         }
         
     }
@@ -38,6 +43,7 @@ public class BuildARFromQRCode : MonoBehaviour
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
         if (raycastManager.Raycast(screenPosition, hits, TrackableType.Planes))
         {
+            Debug.Log("Trying to calculate");
             Pose hitPose = hits[0].pose;
             objectToPlace.transform.position = hitPose.position;
             objectToPlace.transform.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up));

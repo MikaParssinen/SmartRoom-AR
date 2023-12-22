@@ -169,6 +169,8 @@ public class QRCodeDetector : MonoBehaviour
 
     private Vector2 CalculateQRCodeScreenPosition(Result result, int imageWidth, int imageHeight)
     {
+
+        
         var points = result.ResultPoints;
         float x = 0f;
         float y = 0f;
