@@ -40,11 +40,6 @@ public class UIDHandler : MonoBehaviour
     }
 }
 
-
-using UnityEngine;
-using UnityEngine.Networking;
-using System.Collections;
-
 public class ApiManager : MonoBehaviour
 {
     private const string apiUrl = "https://home.myopenhab.org/rest/things/";
