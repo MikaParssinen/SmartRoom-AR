@@ -3,7 +3,7 @@ using UnityEngine;
 public class OverlayManager : MonoBehaviour
 {
     public ReadAndStore readAndStore; // Reference to ReadAndStore script
-    public InfoPanel infoPanel; // Reference to InfoPanel script
+    public InfoPanel infoPanelPrefab; // Reference to InfoPanel prefab
 
     private void OnEnable()
     {
@@ -17,16 +17,19 @@ public class OverlayManager : MonoBehaviour
         readAndStore.GetDeviceInfo -= HandleQRCodeDetected;
     }
 
-    private void HandleQRCodeDetected(string uid)
+    private void HandleQRCodeDetected(DeviceDataPacket dataPacket)
     {
-        string additionalInfo = readAndStore.GetAdditionalInfo(uid);
+        string additionalInfo = readAndStore.GetAdditionalInfo(dataPacket.Label);
 
         ActivateInfoPanel("Title", additionalInfo);
     }
 
     private void ActivateInfoPanel(string title, string container)
     {
-        // Assuming you have a method in InfoPanel to activate it with the provided information
-        infoPanel.ActivatePanel(title, container, true);
+        // Instantiate a new InfoPanel with the provided information
+        InfoPanel infoPanelInstance = Instantiate(infoPanelPrefab);
+        
+        // Activate the InfoPanel with the provided information
+        infoPanelInstance.ActivatePanel(title, container, true);
     }
 }

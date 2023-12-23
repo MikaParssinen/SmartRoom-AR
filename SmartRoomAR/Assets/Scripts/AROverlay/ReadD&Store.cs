@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.Networking;
-using System;
 using System.Collections;
-
 
 public class UIDHandler : MonoBehaviour
 {
@@ -11,6 +9,9 @@ public class UIDHandler : MonoBehaviour
 
     // Reference to the ApiManager script
     public ApiManager apiManager;
+
+    // Reference to the APIAuth script
+    public APIAuth apiAuth;
 
     private void OnEnable()
     {
@@ -29,7 +30,7 @@ public class UIDHandler : MonoBehaviour
         string transformedUid = TransformUid(uid);
 
         // Send the transformed UID to the API manager for further processing
-        apiManager.SendRequest(transformedUid);
+        apiManager.SendRequest(transformedUid, apiAuth.GetHeaders());
     }
 
     private string TransformUid(string uid)
@@ -37,47 +38,71 @@ public class UIDHandler : MonoBehaviour
         // Replace ":" with "%3"
         return uid.Replace(":", "%3A");
     }
+}
 
-    public class ApiManager : MonoBehaviour
+
+using UnityEngine;
+using UnityEngine.Networking;
+using System.Collections;
+
+public class ApiManager : MonoBehaviour
+{
+    private const string apiUrl = "https://home.myopenhab.org/rest/things/";
+
+    // Reference to the APIAuth script
+    public APIAuth apiAuth;
+
+    public void SendRequest(string uid, Dictionary<string, string> headers)
     {
-        private const string apiUrl = "https://home.myopenhab.org/rest/things/";
-        public APIAuth apiAuth;
-        public void SendRequest(string uid)
-        {
-            StartCoroutine(GetDeviceInfo(uid));
-        }
+        StartCoroutine(GetDeviceInfo(uid, headers));
+    }
 
-        IEnumerator GetDeviceInfo(string uid)
-        {
-            string requestUrl = $"{apiUrl}?uid={uid}";
-            Debug.Log("The full url is: " + requestUrl);
+    IEnumerator GetDeviceInfo(string uid, Dictionary<string, string> headers)
+    {
+        string requestUrl = $"{apiUrl}?uid={uid}";
+        Debug.Log("The full url is: " + requestUrl);
 
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(requestUrl))
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(requestUrl))
+        {
+            // Set headers from APIAuth
+            foreach (var header in headers)
             {
-                //webRequest.SetRequestHeader("UID", uid);
-                yield return webRequest.SendWebRequest();
+                webRequest.SetRequestHeader(header.Key, header.Value);
+            }
 
-                if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                    webRequest.result == UnityWebRequest.Result.ProtocolError)
-                {
-                    Debug.LogError($"Error: {webRequest.error}");
-                }
-                else
-                {
-                    // Parse and use the response data as needed
-                    string responseData = webRequest.downloadHandler.text;
-                    Debug.Log($"API Response: {responseData}");
+            yield return webRequest.SendWebRequest();
 
-                    //send this data to other scripts or handle it accordingly
-                    HandleApiData(responseData);
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                webRequest.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError($"Error: {webRequest.error}");
+            }
+            else
+            {
+                // Parse and use the response data as needed
+                string responseData = webRequest.downloadHandler.text;
+                Debug.Log($"API Response: {responseData}");
+
+                // Send the response data to the HandleApiData method in UIDHandler
+                UIDHandler uidHandler = FindObjectOfType<UIDHandler>();
+                if (uidHandler != null)
+                {
+                    uidHandler.HandleApiData(responseData);
                 }
             }
         }
+    }
 
-        private void HandleApiData(string responseData)
+    // Method to handle the DeviceDataPacket
+    public void HandleDeviceData(UIDHandler.DeviceDataPacket dataPacket)
+    {
+        // Handling the data packet here
+        Debug.Log($"Device Label: {dataPacket.Label}");
+        Debug.Log($"Device Status: {dataPacket.Status}");
+        foreach (var channel in dataPacket.Channels)
         {
-            // Implement logic to handle the API response data here
-            //parse the data and use it as needed
+            Debug.Log($"Channel: {channel.Key}, Description: {channel.Value}");
         }
     }
 }
+
