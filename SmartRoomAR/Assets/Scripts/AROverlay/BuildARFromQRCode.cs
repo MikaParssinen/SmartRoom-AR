@@ -12,7 +12,6 @@ public class BuildARFromQRCode : MonoBehaviour
     [SerializeField] private QRCodeDetector qrCodeDetector; // Reference to your QR code detection script
 
 
-    private GameObject pizza, pizza1;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -45,11 +44,12 @@ public class BuildARFromQRCode : MonoBehaviour
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
         if (raycastManager.Raycast(screenPosition, hits, TrackableType.Planes))
         {
-            Debug.Log("Trying to calculate");
             Pose hitPose = hits[0].pose;
-            objectToPlace.transform.position = hitPose.position;
-            objectToPlace.transform.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up));
-            //pizza1 = Instantiate(pizza, new Vector3(0f, 0f, 0f), Quaternion.Euler(70, 0, 0));
+            Debug.Log("Trying to Instantiate");
+            // Instantiate the prefab at the hit position and rotation
+            GameObject instantiatedObject = Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
+
+            // Additional setup or adjustments for the instantiated object can be done here
         }
     }
 
