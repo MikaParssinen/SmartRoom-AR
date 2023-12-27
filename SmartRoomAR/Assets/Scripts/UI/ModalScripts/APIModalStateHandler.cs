@@ -35,6 +35,24 @@ public class APIModalStateHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //If playerpref token exists and goes through validation, set state to success
+        if(PlayerPrefs.HasKey("token"))
+        {
+            bool result = apiAuth.Validate(PlayerPrefs.GetString("token"));
+            if(result)
+            {
+                SetState(APIModalState.Success);
+            }
+            else
+            {
+                SetState(APIModalState.Entry);
+            }
+
+        }
+        else
+        {
+            SetState(APIModalState.Entry);
+        }
         SetState(APIModalState.Entry);
         StartTransition();
         
@@ -125,7 +143,7 @@ public class APIModalStateHandler : MonoBehaviour
     public void ConfirmButtonPressed()
     {
         SetState(APIModalState.Loading);
-        apiAuth.Authenticate(usernameInputField.text, passwordInputField.text, apiKeyInputField.text);
+        apiAuth.Authenticate(usernameInputField.text, passwordInputField.text);
         apiAuth.OnAuthenticationComplete += HandleAuthResult;
 
         
