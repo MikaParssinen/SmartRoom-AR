@@ -87,9 +87,6 @@ public class APILampToggle : MonoBehaviour
             return null;
         }
 
-
-
-
     }
 
     private IEnumerator SendTurnOnCommand()
