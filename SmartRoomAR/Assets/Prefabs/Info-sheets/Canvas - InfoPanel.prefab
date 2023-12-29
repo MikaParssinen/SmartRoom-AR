@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1054094336009146896}
   - component: {fileID: 3451470639749672032}
   - component: {fileID: 1439150066141949985}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas - InfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 977028711160275600}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2766329291103619776}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 450888292011615108}
   - component: {fileID: 1290450778660273647}
   - component: {fileID: 8027468774541681210}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text - Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 64370633601073494}
   - component: {fileID: 2572563850258002342}
   - component: {fileID: 4423767123054251721}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,7 +363,7 @@ GameObject:
   - component: {fileID: 709871571890066013}
   - component: {fileID: 4064581299634418749}
   - component: {fileID: 7726808582574711159}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text - Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
