@@ -4252,7 +4252,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   raycastManager: {fileID: 1907491844}
-  objectToPlace: {fileID: 6358008230965601740}
+  objectToPlace: {fileID: 977028711160275600, guid: b471f6f27ac824e4dad5640011aeddd6,
+    type: 3}
   qrCodeDetector: {fileID: 1907491843}
 --- !u!114 &1907491843
 MonoBehaviour:
@@ -5022,7 +5023,7 @@ PrefabInstance:
     - target: {fileID: 977028711160275600, guid: b471f6f27ac824e4dad5640011aeddd6,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1054094336009146896, guid: b471f6f27ac824e4dad5640011aeddd6,
         type: 3}
@@ -5054,12 +5055,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b471f6f27ac824e4dad5640011aeddd6, type: 3}
---- !u!1 &6358008230965601740 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 977028711160275600, guid: b471f6f27ac824e4dad5640011aeddd6,
-    type: 3}
-  m_PrefabInstance: {fileID: 6358008230965601739}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

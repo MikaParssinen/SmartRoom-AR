@@ -31,10 +31,10 @@ public class InfoPanel : MonoBehaviour
         }
         else
         {
-            activated = false;
+           // activated = false;
             return;
         }
-        activated = false;
+        //activated = false;
     }
 
 
