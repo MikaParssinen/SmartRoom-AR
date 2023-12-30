@@ -31,10 +31,10 @@ public class InfoPanel : MonoBehaviour
         }
         else
         {
-            activated = false;
+            //activated = false;
             return;
         }
-        activated = false;
+       // activated = false;
     }
 
 
@@ -60,6 +60,7 @@ public class InfoPanel : MonoBehaviour
     {
         
        ActivatePanel("Title", "Container", true);
+       
     }
 
     // Update is called once per frame
