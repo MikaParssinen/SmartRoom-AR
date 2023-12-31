@@ -47,7 +47,7 @@ public class BuildARFromQRCode : MonoBehaviour
             Pose hitPose = hits[0].pose;
             Debug.Log("Trying to Instantiate");
             // Instantiate the prefab at the hit position and rotation
-            GameObject instantiatedObject = Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
+            Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
 
             // Additional setup or adjustments for the instantiated object can be done here
         }
