@@ -26,6 +26,6 @@ This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.t
 
 ## Postman API Platform
 
-For API token and authentication
+For API testing
 
 [Postman](https://www.postman.com/)

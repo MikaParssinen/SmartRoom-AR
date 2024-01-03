@@ -6,62 +6,60 @@ using System.Text;
 
 public class APILampToggle : MonoBehaviour
 {
-    private readonly string apiUrlTurnOn = "https://home.myopenhab.org/rest/items/Ceiling_Lamp_switch_21_01";
-    private readonly string apiUrlTurnOff = "https://home.myopenhab.org/rest/items/Ceiling_Lamp_switch_21_01";
-    private readonly string apiUrlState = "https://home.myopenhab.org/rest/items/Ceiling_Lamp_switch_21_01/state";
-    private readonly string apiUrlChangeColour = "https://home.myopenhab.org/rest/items/Ceiling_Lamp_color_21_03";
-
+    private readonly string workerApiUrl = "https://smart-room-worker.erik-ef2.workers.dev/sendcommand";
 
     public void SendCommand(string command)
     {
        
-        StartCoroutine(CheckStateAndSendCommand(command));
+        StartCoroutine(SendWorkerCommand(command));
 
-         
-
-        
     }
 
-    private IEnumerator CheckStateAndSendCommand(string command)
-    {
-        //Get current state of the lamp
-        using (UnityWebRequest www = UnityWebRequest.Get(apiUrlState))
-        {
-            //Set headers
-            www.SetRequestHeader("Authorization", APIAuth.Instance.AuthHeader);
-            www.SetRequestHeader("Accept", "*/*");
-            www.SetRequestHeader("Cookie", "CloudServer=10.11.0.33%3A3000; X-OPENHAB-AUTH-HEADER=true");
-            www.SetRequestHeader("X-OPENHAB-TOKEN", APIAuth.Instance.ApiKeyHeader);
+    private IEnumerator SendWorkerCommand(string command) {
 
-            //Send request
+        string commandType = DetermineCommandType(command);
+        string commandValue = PreparePayload(command);
+
+        if (commandType == null || commandValue == null)
+        {
+            Debug.Log("Command not found");
+            yield break;
+        }
+
+        using (UnityWebRequest www = UnityWebRequest.Get(workerApiUrl)) {
+            www.SetRequestHeader("command-type", commandType);
+            www.SetRequestHeader("command-value", commandValue);
             yield return www.SendWebRequest();
 
-            if(www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-            {
-                //Log error to unity console
-                Debug.Log("Error getting state");
+            if(www.result == UnityWebRequest.Result.ConnectionError) {
+                Debug.Log(www.error);
             }
-            else
-            {
-                //If the lamp is on but command is off
-                if(www.downloadHandler.text == "ON" && command == "off")
-                {
-                    yield return StartCoroutine(SendTurnOffCommand());
-                }
-
-                Debug.Log(www.downloadHandler.text);
-                if(www.downloadHandler.text == "OFF")
-                {
-                    yield return StartCoroutine(SendTurnOnCommand());
-                }
-                //Now set the colour command 
-                yield return StartCoroutine(SendSetColourCommand(PreparePayload(command)));
-                   
-
-                
+            else {
+                Debug.Log("Command sent");
             }
+
 
         }
+
+    }
+    
+
+    private string DetermineCommandType(string command) {
+
+        switch (command)
+        {
+            case "on":
+            case "off":
+                return command.ToLower();
+            case "red":
+            case "blue":
+            case "green":
+            case "yellow":
+                return "colour";
+            default:
+                return null;
+        }
+
 
     }
 
@@ -87,125 +85,7 @@ public class APILampToggle : MonoBehaviour
             return null;
         }
 
-
-
-
     }
 
-    private IEnumerator SendTurnOnCommand()
-    {
-        //Post request to openhab API that takes the payload as string in the body
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(apiUrlTurnOn, ""))
-        {
-            //Set headers
-            www.SetRequestHeader("Authorization", APIAuth.Instance.AuthHeader);
-            www.SetRequestHeader("Accept", "*/*");
-            www.SetRequestHeader("Cookie", "CloudServer=10.11.0.33%3A3000; X-OPENHAB-AUTH-HEADER=true");
-            www.SetRequestHeader("X-OPENHAB-TOKEN", APIAuth.Instance.ApiKeyHeader);
-
-            www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes("ON"));
-            www.uploadHandler.contentType = "text/plain";
-
-            www.downloadHandler = new DownloadHandlerBuffer();
-
-            //Send request
-            yield return www.SendWebRequest();
-
-            //Log response to unity console
-            Debug.Log(www.downloadHandler.text);
-
-            //Check if request was successful
-            if (www.result == UnityWebRequest.Result.Success)
-            {
-                //Log success to unity console
-                Debug.Log("Command sent successfully");
-            }
-            else
-            {
-                //Log error to unity console
-                Debug.Log("Error sending command");
-            }
-
-        }
-
-    }
-
-    private IEnumerator SendTurnOffCommand()
-    {
-        //Post request to openhab API that takes the payload as string in the body
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(apiUrlTurnOff, ""))
-        {
-            //Set headers
-            www.SetRequestHeader("Authorization", APIAuth.Instance.AuthHeader);
-            www.SetRequestHeader("Accept", "*/*");
-            www.SetRequestHeader("Cookie", "CloudServer=10.11.0.33%3A3000; X-OPENHAB-AUTH-HEADER=true");
-            www.SetRequestHeader("X-OPENHAB-TOKEN", APIAuth.Instance.ApiKeyHeader);
-
-            www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes("OFF"));
-            www.uploadHandler.contentType = "text/plain";
-
-            www.downloadHandler = new DownloadHandlerBuffer();
-            //Send request
-            yield return www.SendWebRequest();
-
-            //Log response to unity console
-            Debug.Log(www.downloadHandler.text);
-
-            //Check if request was successful
-            if (www.result == UnityWebRequest.Result.Success)
-            {
-                //Log success to unity console
-                Debug.Log("Command sent successfully");
-            }
-            else
-            {
-                //Log error to unity console
-                Debug.Log("Error sending command");
-            }
-
-        }
-    
-    }
-
-    private IEnumerator SendSetColourCommand(string payload)
-    {
-        //Post request to openhab API that takes the payload as string in the body
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(apiUrlChangeColour, ""))
-        {
-            //Set headers
-            www.SetRequestHeader("Authorization", APIAuth.Instance.AuthHeader);
-            www.SetRequestHeader("Accept", "*/*");
-            www.SetRequestHeader("Cookie", "CloudServer=10.11.0.33%3A3000; X-OPENHAB-AUTH-HEADER=true");
-            www.SetRequestHeader("X-OPENHAB-TOKEN", APIAuth.Instance.ApiKeyHeader);
-
-            //Set payload
-            www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(payload));
-            www.uploadHandler.contentType = "text/plain";
-
-            www.downloadHandler = new DownloadHandlerBuffer();
-
-            //Send request
-            yield return www.SendWebRequest();
-
-            //Log response to unity console
-            Debug.Log(www.downloadHandler.text);
-
-            //Check if request was successful
-            if (www.result == UnityWebRequest.Result.Success)
-            {
-                //Log success to unity console
-                Debug.Log("Command sent successfully");
-            }
-            else
-            {
-                //Log error to unity console
-                Debug.Log("Error sending command");
-            }
-
-        }
-
-    }
-
-}
 
 

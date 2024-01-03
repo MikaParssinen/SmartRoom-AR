@@ -4,8 +4,13 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 using System.Text;
+using System.Linq;
 
-
+[Serializable]
+public class AuthResponse
+{
+    public string token;
+}
 public class APIAuth : MonoBehaviour
 {
 
@@ -30,26 +35,70 @@ public class APIAuth : MonoBehaviour
     }
     
 
-    public void Authenticate(string username, string password, string apiKey)
+    public void Authenticate(string username, string password)
     {
         base64auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
         //Log base64auth to unity console
         Debug.Log(base64auth);
-
-
-
-        tempApiKey = apiKey;
-        StartCoroutine(SendTestRequest());
+        StartCoroutine(SendTestRequest(username));
     }
 
-    private IEnumerator SendTestRequest()
+    public bool Validate(string token) {
+
+        //Log token to unity console
+        Debug.Log(token);
+
+        //Set headers
+       
+        ApiKeyHeader = $"Bearer {token}";
+
+        //Log headers to unity console
+      
+        Debug.Log(ApiKeyHeader);
+
+        //Send request
+        StartCoroutine(SendValidateRequest());
+
+        return IsAuthenticated;
+    }
+
+    private IEnumerator SendValidateRequest()
     {
-        using (UnityWebRequest www = UnityWebRequest.Get("https://home.myopenhab.org/rest/things/zwave%3Adevice%3Ae804a908f8%3Anode14"))
+        using (UnityWebRequest www = UnityWebRequest.Get("https://smart-room-worker.erik-ef2.workers.dev/validate"))
+        {
+            www.SetRequestHeader("Authorization", ApiKeyHeader);
+            
+
+            yield return www.SendWebRequest();
+
+            //Log response to unity console
+            Debug.Log(www.downloadHandler.text);
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                IsAuthenticated = true;
+            }
+
+            else
+            {
+                IsAuthenticated = false;
+            }
+        }
+
+        OnAuthenticationComplete?.Invoke(IsAuthenticated);
+
+    }
+
+
+
+    private IEnumerator SendTestRequest(string username)
+    {
+        using (UnityWebRequest www = UnityWebRequest.Get("https://smart-room-worker.erik-ef2.workers.dev/login"))
         {
             www.SetRequestHeader("Authorization", $"Basic {base64auth}");
-            www.SetRequestHeader("Accept", "*/*");
-            www.SetRequestHeader("Cookie", "CloudServer=10.11.0.33%3A3000; X-OPENHAB-AUTH-HEADER=true");
-            www.SetRequestHeader("X-OPENHAB-TOKEN", tempApiKey);
+            //Send the username in the body of the request
+            www.SetRequestHeader("username", username);
+
             yield return www.SendWebRequest();
 
             //Log response to unity console
@@ -57,9 +106,15 @@ public class APIAuth : MonoBehaviour
 
            if (www.result == UnityWebRequest.Result.Success) 
            {
-                AuthHeader = $"Basic {base64auth}";
-                ApiKeyHeader = tempApiKey;
                 IsAuthenticated = true;
+                AuthResponse jsonResponse = JsonUtility.FromJson<AuthResponse>(www.downloadHandler.text);
+                
+                string token = jsonResponse.token;
+
+                PlayerPrefs.SetString("token", token);
+
+                Debug.Log(PlayerPrefs.GetString("notoken"));
+
 
            }
 
