@@ -87,11 +87,5 @@ public class APILampToggle : MonoBehaviour
 
     }
 
-    
-
-
-    
-
-}
 
 
