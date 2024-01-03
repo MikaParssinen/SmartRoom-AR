@@ -145,7 +145,9 @@ public class QRCodeDetector : MonoBehaviour
                 Debug.Log(_qrCodeScreenPos);
                 Debug.Log(_lastResult);
                 // Send the result to other scripts
+
                 OnQRCodeDetected?.Invoke(_lastResult, _qrCodeScreenPos);
+
 
             }
         }
