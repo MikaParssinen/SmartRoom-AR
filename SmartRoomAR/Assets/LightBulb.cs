@@ -30,8 +30,7 @@ public class LightBulb : MonoBehaviour
 
     [SerializeField]
     private GameObject panel;
-
-    public APILampToggle apiLampToggle;    
+    
     private float animationTime = 0.5f;
 
     
@@ -140,7 +139,6 @@ public class LightBulb : MonoBehaviour
 
     void ChangeToRed()
     {
-        apiLampToggle.SendCommand("red");
         Debug.Log("Changed to red");
         lightSwitch.image.sprite = redLightBulb;
         EndTransition();
@@ -148,7 +146,6 @@ public class LightBulb : MonoBehaviour
 
     void ChangeToYellow()
     {
-       apiLampToggle.SendCommand("yellow");
         Debug.Log("Changed to yellow");
         lightSwitch.image.sprite = yellowLightBulb;
        EndTransition();
@@ -156,7 +153,6 @@ public class LightBulb : MonoBehaviour
 
     void ChangeToBlue()
     {
-       apiLampToggle.SendCommand("blue");
         Debug.Log("Changed to blue");
         lightSwitch.image.sprite = blueLightBulb;
         EndTransition();
@@ -165,7 +161,6 @@ public class LightBulb : MonoBehaviour
 
     void changeToGreen()
     {
-       apiLampToggle.SendCommand("green");
         Debug.Log("Changed to green");
         lightSwitch.image.sprite = greenLightBulb;
         EndTransition();
@@ -173,7 +168,6 @@ public class LightBulb : MonoBehaviour
 
     void changeToWhite()
     {
-        apiLampToggle.SendCommand("off");
         Debug.Log("Changed to white");
         lightSwitch.image.sprite = whiteLightBulb;
         EndTransition();
