@@ -57,8 +57,7 @@ public class InfoPanel : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        
+    {     
        ActivatePanel("Title", "Container", true);
        
     }
@@ -70,3 +69,4 @@ public class InfoPanel : MonoBehaviour
 
     }
 }
+
