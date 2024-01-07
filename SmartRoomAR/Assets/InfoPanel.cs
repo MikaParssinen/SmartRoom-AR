@@ -27,10 +27,12 @@ public class InfoPanel : MonoBehaviour
         }
         else
         {
-           activated = false;
+
+            //activated = false;
+
             return;
         }
-        activated = false;
+       // activated = false;
     }
 
 
@@ -38,6 +40,7 @@ public class InfoPanel : MonoBehaviour
     void Start()
     {     
        ActivatePanel("Title", "Container", true);
+       
     }
 
    
