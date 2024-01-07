@@ -39,10 +39,10 @@ public class BuildARFromQRCode : MonoBehaviour
         
     }
 
-    private void PlaceObjectInAR(string qrCodeData, Vector2 screenPosition)
+    private void PlaceObjectInAR(string qrCodeData, Vector2? screenPosition)
     {
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
-        if (raycastManager.Raycast(screenPosition, hits, TrackableType.Planes))
+        if (raycastManager.Raycast((Vector2)screenPosition, hits, TrackableType.Planes))
         {
             Pose hitPose = hits[0].pose;
             Debug.Log("Trying to Instantiate");

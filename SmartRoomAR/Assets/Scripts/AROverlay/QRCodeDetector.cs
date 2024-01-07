@@ -18,8 +18,10 @@ public class QRCodeDetector : MonoBehaviour
     private NativeArray<byte> _buffer;
     private bool _bufferIsInitialized = false;
 
+    public delegate void QRCodeDetectedDelegate(string qrCodeData, Vector2? screenPosition = null);
+    public event QRCodeDetectedDelegate OnQRCodeDetected;
 
-    public event Action<string, Vector2> OnQRCodeDetected;
+    //public event Action<string, Vector2> OnQRCodeDetected;
 
     private IBarcodeReader _barcodeReader = new BarcodeReader
     {

@@ -325,12 +325,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2996482264953853632}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d3c38989211b4f4fb6f19b45c48fe8b, type: 3}
+  m_Script: {fileID: 11500000, guid: 094efbbb5b032404696fca744bc028f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activated: 0
-  title: {fileID: 8027468774541681210}
-  container: {fileID: 8027468774541681210}
+  title: {fileID: 0}
+  container: {fileID: 0}
 --- !u!95 &4423767123054251721
 Animator:
   serializedVersion: 5
