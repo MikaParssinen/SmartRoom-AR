@@ -11,6 +11,7 @@ public class BuildARFromQRCode : MonoBehaviour
     [SerializeField] private GameObject objectToPlace; // Your AR object
     [SerializeField] private QRCodeDetector qrCodeDetector; // Reference to your QR code detection script
 
+    private GameObject instantiatedObject; // Reference to the instantiated object
 
 
     // Start is called before the first frame update
@@ -44,17 +45,42 @@ public class BuildARFromQRCode : MonoBehaviour
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
         if (raycastManager.Raycast((Vector2)screenPosition, hits, TrackableType.Planes))
         {
+            
             Pose hitPose = hits[0].pose;
             Debug.Log("Trying to Instantiate");
             // Instantiate the prefab at the hit position and rotation
-            Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
-
-            // Additional setup or adjustments for the instantiated object can be done here
+            instantiatedObject = Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
         }
     }
 
+    public void UpdateARObjectWithData(string title, string content)
+    {
+        if (instantiatedObject != null)
+        {
+            // Try getting the InfoPanel component
+            InfoPanel arObjectController = instantiatedObject.GetComponent<InfoPanel>();
 
+            // If not found, try searching in child objects
+            if (arObjectController == null)
+            {
+                arObjectController = instantiatedObject.GetComponentInChildren<InfoPanel>();
+                if (arObjectController == null)
+                {
+                    Debug.LogError("InfoPanel component not found on the instantiated object or its children.");
+                }
+            }
 
+            if (arObjectController != null)
+            {
+                Debug.Log($"Updating InfoPanel with Title: {title}, Content: {content}");
+                arObjectController.ActivatePanel(title, content, true);
+            }
+        }
+        else
+        {
+            Debug.LogError("No instantiated object to update.");
+        }
+    }
 
 
 }
