@@ -18,21 +18,11 @@ public class InfoPanel : MonoBehaviour
 
     public void ActivatePanel(string Title, string Container, bool Activate)
     {   
-        activated = Activate;
-        if(activated)
-        {
+       
             title.text = Title;
             container.text = Container;
            
-        }
-        else
-        {
-
-            //activated = false;
-
-            return;
-        }
-       // activated = false;
+     
     }
 
 

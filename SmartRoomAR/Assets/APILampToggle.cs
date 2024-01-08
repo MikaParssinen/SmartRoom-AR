@@ -10,12 +10,13 @@ public class APILampToggle : MonoBehaviour
 
     public void SendCommand(string command)
     {
-       
+
         StartCoroutine(SendWorkerCommand(command));
 
     }
 
-    private IEnumerator SendWorkerCommand(string command) {
+    private IEnumerator SendWorkerCommand(string command)
+    {
 
         string commandType = DetermineCommandType(command);
         string commandValue = PreparePayload(command);
@@ -26,15 +27,18 @@ public class APILampToggle : MonoBehaviour
             yield break;
         }
 
-        using (UnityWebRequest www = UnityWebRequest.Get(workerApiUrl)) {
+        using (UnityWebRequest www = UnityWebRequest.Get(workerApiUrl))
+        {
             www.SetRequestHeader("command-type", commandType);
             www.SetRequestHeader("command-value", commandValue);
             yield return www.SendWebRequest();
 
-            if(www.result == UnityWebRequest.Result.ConnectionError) {
+            if (www.result == UnityWebRequest.Result.ConnectionError)
+            {
                 Debug.Log(www.error);
             }
-            else {
+            else
+            {
                 Debug.Log("Command sent");
             }
 
@@ -42,9 +46,10 @@ public class APILampToggle : MonoBehaviour
         }
 
     }
-    
 
-    private string DetermineCommandType(string command) {
+
+    private string DetermineCommandType(string command)
+    {
 
         switch (command)
         {
@@ -86,6 +91,6 @@ public class APILampToggle : MonoBehaviour
         }
 
     }
-
+}
 
 
