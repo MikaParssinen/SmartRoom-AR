@@ -112,6 +112,7 @@ public class APIAuth : MonoBehaviour
                 string token = jsonResponse.token;
 
                 PlayerPrefs.SetString("token", token);
+                PlayerPrefs.Save();
 
                 Debug.Log(PlayerPrefs.GetString("notoken"));
 
