@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,10 +11,11 @@ public class BuildARFromQRCode : MonoBehaviour
     [SerializeField] private ARRaycastManager raycastManager;
     [SerializeField] private GameObject objectToPlace; // Your AR object
     [SerializeField] private QRCodeDetector qrCodeDetector; // Reference to your QR code detection script
-
+    
     //private GameObject instantiatedObject; // Reference to the instantiated object
 
-    private List<GameObject> instantiatedObjects = new List<GameObject>();
+    public event Action onListChanged;
+    public List<GameObject> instantiatedObjects = new List<GameObject>();
 
 
     // Start is called before the first frame update
@@ -55,6 +57,7 @@ public class BuildARFromQRCode : MonoBehaviour
             // Instantiate the prefab at the hit position and rotation
             GameObject newObject = Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
             instantiatedObjects.Add(newObject);
+            onListChanged?.Invoke();
 
             // Set the name of the new object to the QR code data
             newObject.name = qrCodeData;
@@ -116,6 +119,11 @@ public class BuildARFromQRCode : MonoBehaviour
             instantiatedObjects.Remove(objectToRemove);
             Destroy(objectToRemove);
         }
+    }
+
+    public List<GameObject> GetInstantiatedObjects()
+    {
+        return instantiatedObjects;
     }
 
     public void RemoveAllARObjects()
