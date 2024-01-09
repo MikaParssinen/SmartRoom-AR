@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -16,76 +16,82 @@ public class BuildARFromQRCode : MonoBehaviour
 
     public event Action onListChanged;
     public List<GameObject> instantiatedObjects = new List<GameObject>();
+    private const int maxRaycastAttempts = 50;
+    private const float retryDelay = 1f; // Delay in seconds between raycast attempts
 
-    // Start is called before the first frame update
     void OnEnable()
     {
-
-        if(qrCodeDetector != null)
+        lampButtonPrefab.SetActive(false);
+        if (qrCodeDetector != null)
         {
-            Debug.Log("Trying to PlaceObject");
-            qrCodeDetector.OnQRCodeDetected += PlaceObjectInAR;
+            
+            Debug.Log("QR Code Detector active.");
+            qrCodeDetector.OnQRCodeDetected += HandleQRCodeDetected;
         }
         else
         {
             Debug.Log("qrCodeDetector is null");
         }
-        
     }
 
     void OnDisable()
     {
-        if(qrCodeDetector != null)
+        if (qrCodeDetector != null)
         {
-            qrCodeDetector.OnQRCodeDetected -= PlaceObjectInAR;
-
+            qrCodeDetector.OnQRCodeDetected -= HandleQRCodeDetected;
         }
-        
     }
 
-    private void PlaceObjectInAR(string qrCodeData, Vector2? screenPosition)
+    private void HandleQRCodeDetected(string qrCodeData, Vector2? screenPosition)
     {
-        Debug.Log("PlaceObjectInAR called with QR Code Data: " + qrCodeData);
-
         if (qrCodeData == "deconz:extendedcolorlight:e7f460383d:ceiling-light-panel")
         {
-            // Instantiate the lamp button UI
             Debug.Log("Activating Lamp Button UI");
-            GameObject lampButtonUI = Instantiate(lampButtonPrefab, uiCanvas.transform, false);
-            lampButtonUI.name = "Lamp Button UI";
+            lampButtonPrefab.SetActive(true);
+           // GameObject lampButtonUI = Instantiate(lampButtonPrefab, uiCanvas.transform, false);
+            //lampButtonUI.name = "Lamp Button UI";
+            //instantiatedObjects.Add(lampButtonUI);
+            
         }
 
-        // AR object instantiation logic with retry mechanism
-        const int maxAttempts = 50; // Maximum number of raycast attempts
-        int attempts = 0;
-        bool hitSuccess = false;
+        if (screenPosition.HasValue)
+        {
+            Debug.Log("We have entered :)");
+            StartCoroutine(RetryRaycast(qrCodeData, screenPosition.Value));
+            
+        }
+    }
 
-        while (attempts < maxAttempts && !hitSuccess)
+    private IEnumerator RetryRaycast(string qrCodeData, Vector2 screenPosition)
+    {
+        int attempts = 0;
+        while (attempts < maxRaycastAttempts)
         {
             attempts++;
             List<ARRaycastHit> hits = new List<ARRaycastHit>();
-            if (screenPosition.HasValue && raycastManager.Raycast(screenPosition.Value, hits, TrackableType.Planes))
+            if (raycastManager.Raycast(screenPosition, hits, TrackableType.Planes))
             {
                 Pose hitPose = hits[0].pose;
                 GameObject newObject = Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
+
                 newObject.name = qrCodeData;
+                Debug.Log(newObject.name);
                 instantiatedObjects.Add(newObject);
-                Debug.Log("Instantiated new AR object at: " + hitPose.position);
-                hitSuccess = true;
+                Debug.Log("AR object instantiated at: " + hitPose.position);
+                onListChanged?.Invoke();
+                yield break; // Exit the coroutine if successful
             }
             else
             {
                 Debug.Log("Raycast attempt " + attempts + " did not hit a plane for QR code: " + qrCodeData);
+                yield return new WaitForSeconds(retryDelay); // Wait before retrying
             }
         }
 
-        if (!hitSuccess)
-        {
-            Debug.LogError("Raycast failed after " + maxAttempts + " attempts.");
-        }
-
-        onListChanged?.Invoke();
+        Debug.LogError("Raycast failed after " + maxRaycastAttempts + " attempts.");
     }
+
+    
 
 
     public void UpdateARObjectWithData(string title, string content)
@@ -96,6 +102,7 @@ public class BuildARFromQRCode : MonoBehaviour
             GameObject objectToUpdate = instantiatedObjects[instantiatedObjects.Count - 1];
 
             InfoPanel arObjectController = objectToUpdate.GetComponent<InfoPanel>();
+
             if (arObjectController == null)
             {
                 arObjectController = objectToUpdate.GetComponentInChildren<InfoPanel>();
@@ -134,9 +141,15 @@ public class BuildARFromQRCode : MonoBehaviour
     {
         if (instantiatedObjects.Contains(objectToRemove))
         {
+            if(objectToRemove.name == "deconz:extendedcolorlight:e7f460383d:ceiling-light-panel")
+            {
+                lampButtonPrefab.SetActive(false);
+
+            }
             instantiatedObjects.Remove(objectToRemove);
             Destroy(objectToRemove);
         }
+        
     }
 
     public List<GameObject> GetInstantiatedObjects()

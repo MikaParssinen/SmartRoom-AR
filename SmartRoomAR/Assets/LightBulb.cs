@@ -105,15 +105,11 @@ public class LightBulb : MonoBehaviour
 
     private void StartTransition()
     {
-        
         float initialX = 455;
         panelRectTransform.localPosition = new Vector2(initialX, panelRectTransform.localPosition.y);
         LeanTween.moveX(panelRectTransform, 455, 1.5f).setEase(LeanTweenType.easeOutBack);
         LeanTween.value(gameObject, UpdatePanelWidth, 0, 2054, animationTime).setEase(LeanTweenType.easeOutBack);
-          
-       
-
-        
+         
     }
 
     private void UpdatePanelWidth(float width)
@@ -124,7 +120,6 @@ public class LightBulb : MonoBehaviour
     private void EndTransition()
     {
 
-         
         float finalX = 455; 
         LeanTween.moveX(panelRectTransform, finalX, 1.5f).setEase(LeanTweenType.easeInBack);
         StartCoroutine(ChangeWidth(panelRectTransform, panelRectTransform.rect.width, 0, animationTime));
