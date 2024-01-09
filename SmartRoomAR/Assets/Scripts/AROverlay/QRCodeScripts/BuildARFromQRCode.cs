@@ -17,7 +17,7 @@ public class BuildARFromQRCode : MonoBehaviour
     public event Action onListChanged;
     public List<GameObject> instantiatedObjects = new List<GameObject>();
     private const int maxRaycastAttempts = 50;
-    private const float retryDelay = 1f; // Delay in seconds between raycast attempts
+    private const float retryDelay = 0.5f; // Delay in seconds between raycast attempts
 
     void OnEnable()
     {

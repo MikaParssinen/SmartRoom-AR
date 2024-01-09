@@ -71,8 +71,8 @@ public class LightBulb : MonoBehaviour
         {
             Debug.Log("Button pressed!!!!");
             panelCanvasGroup.alpha = 1;
-            
-            StartTransition();
+            panel.SetActive(true); 
+            //StartTransition();
             blueButton.interactable = true;
             redButton.interactable = true;
             yellowButton.interactable = true;
@@ -81,7 +81,8 @@ public class LightBulb : MonoBehaviour
         }
         else
         {
-            EndTransition();
+            panel.SetActive(false);
+            //EndTransition();
             //panelCanvasGroup.alpha = 0;
             
         }
