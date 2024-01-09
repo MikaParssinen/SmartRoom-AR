@@ -9,9 +9,9 @@ using UnityEngine.XR.ARSubsystems;
 public class BuildARFromQRCode : MonoBehaviour
 {
     [SerializeField] private ARRaycastManager raycastManager;
-    [SerializeField] private GameObject objectToPlace; // Your AR object
-    [SerializeField] private GameObject lampButtonPrefab; // Your Lamp Button UI Prefab
-    [SerializeField] private Canvas uiCanvas; // Reference to your UI Canvas
+    [SerializeField] private GameObject objectToPlace; // AR object
+    [SerializeField] private GameObject lampButtonPrefab; // Lamp Button UI Prefab
+    [SerializeField] private Canvas uiCanvas; // Reference to UI Canvas
     [SerializeField] private QRCodeDetector qrCodeDetector; // Reference to your QR code detection script
 
     public event Action onListChanged;
@@ -48,10 +48,7 @@ public class BuildARFromQRCode : MonoBehaviour
         {
             Debug.Log("Activating Lamp Button UI");
             lampButtonPrefab.SetActive(true);
-           // GameObject lampButtonUI = Instantiate(lampButtonPrefab, uiCanvas.transform, false);
-            //lampButtonUI.name = "Lamp Button UI";
-            //instantiatedObjects.Add(lampButtonUI);
-            
+           
         }
 
         if (screenPosition.HasValue)

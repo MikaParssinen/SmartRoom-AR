@@ -47,7 +47,6 @@ public class APILampToggle : MonoBehaviour
 
     }
 
-
     private string DetermineCommandType(string command)
     {
 
