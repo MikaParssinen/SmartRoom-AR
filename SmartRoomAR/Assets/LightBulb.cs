@@ -175,10 +175,5 @@ public class LightBulb : MonoBehaviour
 
 
 
-    // Update is called once per frame
-    void Update()
-    {
 
-        
-    }
 }

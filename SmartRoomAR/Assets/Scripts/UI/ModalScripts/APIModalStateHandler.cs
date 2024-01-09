@@ -36,6 +36,7 @@ public class APIModalStateHandler : MonoBehaviour
         //If playerpref token exists and goes through validation, set state to success
         if(PlayerPrefs.HasKey("token"))
         {
+            Debug.Log("Hej horungar vi hitta en token :)");
             bool result = apiAuth.Validate(PlayerPrefs.GetString("token"));
             if(result)
             {
@@ -51,7 +52,7 @@ public class APIModalStateHandler : MonoBehaviour
         {
             SetState(APIModalState.Entry);
         }
-        SetState(APIModalState.Entry);
+       // SetState(APIModalState.Entry);
         StartTransition();
         
     }

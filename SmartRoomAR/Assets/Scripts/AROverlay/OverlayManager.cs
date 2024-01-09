@@ -1,35 +1,50 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class OverlayManager : MonoBehaviour
 {
-    public ReadAndStore readAndStore; // Reference to ReadAndStore script
-    public InfoPanel infoPanelPrefab; // Reference to InfoPanel prefab
+    public APIManager apiManager; // Reference to your API Manager
+    public BuildARFromQRCode buildARFromQRCode; // Reference to the BuildARFromQRCode script
 
     private void OnEnable()
     {
-        // Subscribe to the event in ReadAndStore that signals a new QR code detection
-        readAndStore.GetDeviceInfo += HandleQRCodeDetected;
+        // Subscribe to the event in APIManager that signals new API data
+        apiManager.OnApiDataReceived += HandleApiDataReceived;
     }
 
     private void OnDisable()
     {
         // Unsubscribe from the event when this script is disabled
-        readAndStore.GetDeviceInfo -= HandleQRCodeDetected;
+        apiManager.OnApiDataReceived -= HandleApiDataReceived;
     }
 
-    private void HandleQRCodeDetected(DeviceDataPacket dataPacket)
+    private void HandleApiDataReceived(APIManager.DeviceData data)
     {
-        string additionalInfo = readAndStore.GetAdditionalInfo(dataPacket.Label);
+        Debug.Log($"This is the data in HandleApiDataReceived: {data} ");
+     
+        // Extract the information from the API data
+        string title = data.Label;
+        string status = data.StatusInfo.Status;
 
-        ActivateInfoPanel("Title", additionalInfo);
-    }
+        Debug.Log(title);
+        Debug.Log(status);
 
-    private void ActivateInfoPanel(string title, string container)
-    {
-        // Instantiate a new InfoPanel with the provided information
-        InfoPanel infoPanelInstance = Instantiate(infoPanelPrefab);
         
-        // Activate the InfoPanel with the provided information
-        infoPanelInstance.ActivatePanel(title, container, true);
+
+        // Construct additional information about channels
+        string channelsInfo = "Channels: ";
+        foreach (var channel in data.Channels)
+        {
+            channelsInfo += $"{channel.ChannelName}, ";
+        }
+
+        // Remove the trailing comma and space
+        channelsInfo = channelsInfo.TrimEnd(',', ' ');
+
+        // Update the AR object with the new data
+        if (buildARFromQRCode != null)
+        {
+            Debug.Log("Updating infopanel");
+            buildARFromQRCode.UpdateARObjectWithData(title, $"{status}\n{channelsInfo}");
+        }
     }
 }
