@@ -39,10 +39,9 @@ public class APIManager : MonoBehaviour
                 string responseData = www.downloadHandler.text;
                 Debug.Log($"API Response: {responseData}");
 
-                // Convert the JSON response to DeviceData
+                // Convert the JSON response to DeviceData using JsonUtility
                 DeviceData data = JsonUtility.FromJson<DeviceData>(responseData);
 
-                HandleDeviceData(data);
                 // Send the data to the listeners (OverlayManager)
                 OnApiDataReceived?.Invoke(data);
             }
@@ -52,35 +51,36 @@ public class APIManager : MonoBehaviour
     // Method to handle the DeviceData
     public void HandleDeviceData(DeviceData data)
     {
-        // Handling the data here
-        Debug.Log($"Device Label: {data.Label}");
-        Debug.Log($"Device Status: {data.StatusInfo.Status}");
-        foreach (var channel in data.Channels)
+        // Access the fields you need
+        foreach (var channel in data.channels)
         {
-            Debug.Log($"Channel: {channel.ChannelName}, Description: {channel.Description}");
+            Debug.Log($"Channel: {channel.label}, Description: {channel.description}");
         }
+
+        Debug.Log($"Device Label: {data.label}");
+        Debug.Log($"Device Status: {data.statusInfo.status}");
     }
 
     [Serializable]
-    public struct DeviceData
+    public class DeviceData
     {
-        public string Label;
-        public StatusInfo StatusInfo;
-        public List<Channel> Channels;
-    }
+        public List<Channel> channels;
+        public StatusInfo statusInfo;
+        public string label;
 
-    [Serializable]
-    public struct StatusInfo
-    {
-        public string Status;
-    }
+        [Serializable]
+        public class Channel
+        {
+            public string uid;
+            public string label;
+            public string description;
+        }
 
-    [Serializable]
-    public struct Channel
-    {
-        // Define the properties you get for each channel in JSON format here
-        // Example:
-        public string ChannelName;
-        public string Description;
+        [Serializable]
+        public class StatusInfo
+        {
+            public string status;
+            public string statusDetail;
+        }
     }
 }

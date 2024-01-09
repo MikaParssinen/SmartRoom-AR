@@ -22,19 +22,18 @@ public class OverlayManager : MonoBehaviour
         Debug.Log($"This is the data in HandleApiDataReceived: {data} ");
      
         // Extract the information from the API data
-        string title = data.Label;
-        string status = data.StatusInfo.Status;
+        string title = data.label;
+        string status = data.statusInfo.status;
 
         Debug.Log(title);
         Debug.Log(status);
 
         
-
         // Construct additional information about channels
         string channelsInfo = "Channels: ";
-        foreach (var channel in data.Channels)
+        foreach (var channel in data.channels)
         {
-            channelsInfo += $"{channel.ChannelName}, ";
+            channelsInfo += $"{channel.label}, ";
         }
 
         // Remove the trailing comma and space
