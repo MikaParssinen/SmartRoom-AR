@@ -56,8 +56,8 @@ public class BuildARFromQRCode : MonoBehaviour
     public void UpdateARObjectWithData(string title, string content)
     {
 
-        title = "Termostat";
-        content = "1 degree, 2 users, 6 micophones";
+        //title = "Termostat";
+        //content = "1 degree, 2 users, 6 micophones";
 
         if (instantiatedObject != null)
         {

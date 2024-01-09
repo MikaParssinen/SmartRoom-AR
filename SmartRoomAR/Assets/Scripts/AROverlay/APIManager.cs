@@ -42,9 +42,7 @@ public class APIManager : MonoBehaviour
                 // Convert the JSON response to DeviceData
                 DeviceData data = JsonUtility.FromJson<DeviceData>(responseData);
 
-                Debug.Log("data send to overlaymanager");
-                Debug.Log(data.Channels);
-                Debug.Log(data.Label);
+                HandleDeviceData(data);
                 // Send the data to the listeners (OverlayManager)
                 OnApiDataReceived?.Invoke(data);
             }
