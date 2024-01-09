@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 
@@ -13,13 +14,28 @@ public class InfoPanel : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI container;
-    
+
+
+    [SerializeField]
+    private RectTransform panelRectTransform;
+
+    [SerializeField]
+    private ContentSizeFitter contentSizeFitter;    
 
 
     public void ActivatePanel(string Title, string Container, bool Activate)
     {   
             title.text = Title;
             container.text = Container;
+            AdjustSize();
+    }
+
+    private void AdjustSize()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(container.rectTransform);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panelRectTransform);
+
     }
 
 
