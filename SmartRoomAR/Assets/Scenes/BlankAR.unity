@@ -3053,6 +3053,7 @@ GameObject:
   - component: {fileID: 1354141934}
   - component: {fileID: 1354141936}
   - component: {fileID: 1354141935}
+  - component: {fileID: 1354141937}
   m_Layer: 0
   m_Name: AR Camera
   m_TagString: Untagged
@@ -3235,6 +3236,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RaycastPrefab: {fileID: 0}
+--- !u!114 &1354141937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354141925}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70146c7910e744d0c915719371cd1b9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arCamera: {fileID: 0}
 --- !u!1 &1368874960
 GameObject:
   m_ObjectHideFlags: 0
@@ -4279,6 +4293,7 @@ GameObject:
   - component: {fileID: 1907491844}
   - component: {fileID: 1907491843}
   - component: {fileID: 1907491842}
+  - component: {fileID: 1907491845}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -4376,6 +4391,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RaycastPrefab: {fileID: 0}
+--- !u!114 &1907491845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1907491837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70146c7910e744d0c915719371cd1b9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arCamera: {fileID: 1354141926}
 --- !u!1 &2030897335
 GameObject:
   m_ObjectHideFlags: 0

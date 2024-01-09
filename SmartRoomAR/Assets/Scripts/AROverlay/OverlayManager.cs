@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Networking;
 
 public class OverlayManager : MonoBehaviour
 {
@@ -20,7 +25,7 @@ public class OverlayManager : MonoBehaviour
     private void HandleApiDataReceived(APIManager.DeviceData data)
     {
         Debug.Log($"This is the data in HandleApiDataReceived: {data} ");
-     
+
         // Extract the information from the API data
         string title = data.label;
         string status = data.statusInfo.status;
@@ -28,22 +33,70 @@ public class OverlayManager : MonoBehaviour
         Debug.Log(title);
         Debug.Log(status);
 
-        
-        // Construct additional information about channels
+
+        StartCoroutine(GetLinkedItemsStatus(data.channels, (channelsInfo) => {
+            // Once all API responses are received, update the AR object
+            if (buildARFromQRCode != null)
+            {
+                buildARFromQRCode.UpdateARObjectWithData(title, $"{status}\n{channelsInfo}");
+            }
+        }));
+    }
+
+
+    IEnumerator GetLinkedItemsStatus(List<APIManager.DeviceData.Channel> channels, Action<string> onCompleted)
+    {
         string channelsInfo = "Channels: ";
-        foreach (var channel in data.channels)
+        int totalCount = channels.SelectMany(ch => ch.linkedItems).Count();
+        int processedCount = 0;
+
+        foreach (var channel in channels)
         {
-            channelsInfo += $"{channel.label}, ";
+            foreach (var linkedItem in channel.linkedItems)
+            {
+
+                StartCoroutine(MakeApiCallForLinkedItem(linkedItem, (itemStatus) => {
+                    channelsInfo += $"{linkedItem}: {itemStatus}, ";
+                    processedCount++;
+
+                    if (processedCount == totalCount)
+                    {
+
+                        channelsInfo = channelsInfo.TrimEnd(',', ' ');
+                        onCompleted?.Invoke(channelsInfo);
+                    }
+                }));
+            }
         }
 
-        // Remove the trailing comma and space
-        channelsInfo = channelsInfo.TrimEnd(',', ' ');
+        yield return null;
+    }
 
-        // Update the AR object with the new data
-        if (buildARFromQRCode != null)
+    IEnumerator MakeApiCallForLinkedItem(string linkedItem, Action<string> onStatusReceived)
+    {
+        string apiUrl = "https://smart-room-worker.erik-ef2.workers.dev/getitemstate";
+        UnityWebRequest www = UnityWebRequest.Get(apiUrl);
+        www.SetRequestHeader("item-name", linkedItem);
+
+        yield return www.SendWebRequest(); // Wait for the response
+
+        if (www.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("Updating infopanel");
-            buildARFromQRCode.UpdateARObjectWithData(title, $"{status}\n{channelsInfo}");
+            // Parse the JSON response
+            string jsonResponse = www.downloadHandler.text;
+            ItemStateResponse response = JsonUtility.FromJson<ItemStateResponse>(jsonResponse);
+            onStatusReceived?.Invoke(response.state);
         }
+        else
+        {
+            Debug.LogError("Error in API call: " + www.error);
+            onStatusReceived?.Invoke("Error");
+        }
+    }
+
+    [Serializable]
+    public class ItemStateResponse
+    {
+        public string state;
     }
 }

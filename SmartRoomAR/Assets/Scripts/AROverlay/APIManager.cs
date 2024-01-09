@@ -71,6 +71,7 @@ public class APIManager : MonoBehaviour
         [Serializable]
         public class Channel
         {
+            public List<string> linkedItems;
             public string uid;
             public string label;
             public string description;

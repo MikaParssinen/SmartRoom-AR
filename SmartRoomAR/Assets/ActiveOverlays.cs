@@ -112,6 +112,11 @@ public class ActiveOverlays : MonoBehaviour
         
     }
 
+    private void OnDisable()
+    {
+       // OtherClass.OnActiveOverlaysChanged -= InitiateOverlays;
+    }
+
     // Update is called once per frame
     void Update()
     {
