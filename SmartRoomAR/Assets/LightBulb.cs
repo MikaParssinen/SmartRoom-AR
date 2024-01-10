@@ -71,8 +71,8 @@ public class LightBulb : MonoBehaviour
         {
             Debug.Log("Button pressed!!!!");
             panelCanvasGroup.alpha = 1;
-            
-            StartTransition();
+            panel.SetActive(true); 
+            //StartTransition();
             blueButton.interactable = true;
             redButton.interactable = true;
             yellowButton.interactable = true;
@@ -81,7 +81,8 @@ public class LightBulb : MonoBehaviour
         }
         else
         {
-            EndTransition();
+            panel.SetActive(false);
+            //EndTransition();
             //panelCanvasGroup.alpha = 0;
             
         }
@@ -105,15 +106,11 @@ public class LightBulb : MonoBehaviour
 
     private void StartTransition()
     {
-        
         float initialX = 455;
         panelRectTransform.localPosition = new Vector2(initialX, panelRectTransform.localPosition.y);
         LeanTween.moveX(panelRectTransform, 455, 1.5f).setEase(LeanTweenType.easeOutBack);
         LeanTween.value(gameObject, UpdatePanelWidth, 0, 2054, animationTime).setEase(LeanTweenType.easeOutBack);
-          
-       
-
-        
+         
     }
 
     private void UpdatePanelWidth(float width)
@@ -124,7 +121,6 @@ public class LightBulb : MonoBehaviour
     private void EndTransition()
     {
 
-         
         float finalX = 455; 
         LeanTween.moveX(panelRectTransform, finalX, 1.5f).setEase(LeanTweenType.easeInBack);
         StartCoroutine(ChangeWidth(panelRectTransform, panelRectTransform.rect.width, 0, animationTime));
