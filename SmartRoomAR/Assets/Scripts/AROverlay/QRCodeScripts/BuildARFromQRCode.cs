@@ -145,6 +145,7 @@ public class BuildARFromQRCode : MonoBehaviour
             }
             instantiatedObjects.Remove(objectToRemove);
             Destroy(objectToRemove);
+            qrCodeDetector.SetLastResultNull();
         }
         
     }
