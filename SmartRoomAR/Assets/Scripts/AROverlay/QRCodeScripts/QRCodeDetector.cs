@@ -37,11 +37,14 @@ public class QRCodeDetector : MonoBehaviour
         }
     };
 
-
-
+    
     private float _frameProcessInterval = 1.0f; //Scans an frame every 1 sec
     private float _lastFrameProcessedTime = 0.0f;
 
+
+    public void SetLastResultNull() {
+        _lastResult = null;   
+    }
 
     private void OnEnable()
     {
