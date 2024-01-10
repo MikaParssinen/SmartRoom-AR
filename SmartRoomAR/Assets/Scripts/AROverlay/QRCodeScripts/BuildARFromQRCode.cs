@@ -68,15 +68,18 @@ public class BuildARFromQRCode : MonoBehaviour
             List<ARRaycastHit> hits = new List<ARRaycastHit>();
             if (raycastManager.Raycast(screenPosition, hits, TrackableType.Planes))
             {
-                Pose hitPose = hits[0].pose;
-                GameObject newObject = Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
+                if(!instantiatedObjects.Exists(obj => obj.name == qrCodeData))
+                {
+                    Pose hitPose = hits[0].pose;
+                    GameObject newObject = Instantiate(objectToPlace, hitPose.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(Camera.current.transform.forward, Vector3.up)));
 
-                newObject.name = qrCodeData;
-                Debug.Log(newObject.name);
-                instantiatedObjects.Add(newObject);
-                Debug.Log("AR object instantiated at: " + hitPose.position);
-                onListChanged?.Invoke();
-                yield break; // Exit the coroutine if successful
+                    newObject.name = qrCodeData;
+                    Debug.Log(newObject.name);
+                    instantiatedObjects.Add(newObject);
+                    Debug.Log("AR object instantiated at: " + hitPose.position);
+                    onListChanged?.Invoke();
+                    yield break; // Exit the coroutine if successful
+                }
             }
             else
             {
