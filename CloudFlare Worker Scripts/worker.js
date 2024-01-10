@@ -166,6 +166,27 @@ async function createJWT(username) {
         const commandUrl = 'https://home.myopenhab.org/rest/items/Ceiling_Lamp_switch_21_01' 
           return sendCommand(commandUrl, commandType.toUpperCase());
       }
+    if (request.method === "GET" && request.url.endsWith("/getitemstate")) {
+    const linkedItemName = request.headers.get('item-name');
+    const stateUrl = `https://home.myopenhab.org/rest/items/${linkedItemName}/state`;
+    const headers = {
+        'Authorization': `Basic ${globalThis.ADMIN_BASE}`,
+        "Cookie": "CloudServer=10.11.0.33%3A3000; X-OPENHAB-AUTH-HEADER=true",
+        "X-OPENHAB-TOKEN": globalThis.API_KEY
+    };
+
+    const response = await fetch(stateUrl, { headers });
+    if (!response.ok) {
+        throw new Error(`Failed to get item state: ${response.statusText}`);
+    }
+    
+    // Extract the text from the response
+    const stateText = await response.text();
+
+    return new Response(JSON.stringify({ state: stateText }), {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200
+    });
   
       
   

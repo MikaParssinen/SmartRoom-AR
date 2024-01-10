@@ -35,6 +35,7 @@ public class OverlayManager : MonoBehaviour
 
 
         StartCoroutine(GetLinkedItemsStatus(data.channels, (channelsInfo) => {
+
             // Once all API responses are received, update the AR object
             if (buildARFromQRCode != null)
             {
@@ -67,9 +68,73 @@ public class OverlayManager : MonoBehaviour
                     }
                 }));
             }
+
+        // Once all API responses are received, update the AR object
+        if (buildARFromQRCode != null)
+        {
+            buildARFromQRCode.UpdateARObjectWithData(title, $"{status}\n{channelsInfo}");
+
         }
+    }));
+    }
+
 
         yield return null;
+    }
+
+    IEnumerator MakeApiCallForLinkedItem(string linkedItem, Action<string> onStatusReceived)
+    {
+        string apiUrl = "https://smart-room-worker.erik-ef2.workers.dev/getitemstate";
+        UnityWebRequest www = UnityWebRequest.Get(apiUrl);
+        www.SetRequestHeader("item-name", linkedItem);
+
+        yield return www.SendWebRequest(); // Wait for the response
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            // Parse the JSON response
+            string jsonResponse = www.downloadHandler.text;
+            ItemStateResponse response = JsonUtility.FromJson<ItemStateResponse>(jsonResponse);
+            onStatusReceived?.Invoke(response.state);
+
+    IEnumerator GetLinkedItemsStatus(List<APIManager.Channel> channels, Action<string> onCompleted)
+    {
+    string channelsInfo = "Channels: ";
+    int totalCount = channels.SelectMany(ch => ch.linkedItems).Count();
+    int processedCount = 0;
+
+    foreach (var channel in channels)
+    {
+        foreach (var linkedItem in channel.linkedItems)
+        {
+            
+            StartCoroutine(MakeApiCallForLinkedItem(linkedItem, (itemStatus) => {
+                channelsInfo += $"{linkedItem}: {itemStatus}, ";
+                processedCount++;
+
+                if (processedCount == totalCount)
+                {
+                    
+                    channelsInfo = channelsInfo.TrimEnd(',', ' ');
+                    onCompleted?.Invoke(channelsInfo);
+                }
+            }));
+
+        }
+        else
+        {
+            Debug.LogError("Error in API call: " + www.error);
+            onStatusReceived?.Invoke("Error");
+        }
+    }
+
+    [Serializable]
+    public class ItemStateResponse
+    {
+        public string state;
+    }
+
+    yield return null;
     }
 
     IEnumerator MakeApiCallForLinkedItem(string linkedItem, Action<string> onStatusReceived)
@@ -90,7 +155,7 @@ public class OverlayManager : MonoBehaviour
         else
         {
             Debug.LogError("Error in API call: " + www.error);
-            onStatusReceived?.Invoke("Error");
+            onStatusReceived?.Invoke("Error"); 
         }
     }
 
