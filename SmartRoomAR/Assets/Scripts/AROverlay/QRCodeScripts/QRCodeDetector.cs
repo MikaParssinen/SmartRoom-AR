@@ -1,10 +1,7 @@
-
 using ZXing;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using System;
-
 using Unity.Collections;
 
 public class QRCodeDetector : MonoBehaviour
@@ -21,7 +18,7 @@ public class QRCodeDetector : MonoBehaviour
     public delegate void QRCodeDetectedDelegate(string qrCodeData, Vector2? screenPosition = null);
     public event QRCodeDetectedDelegate OnQRCodeDetected;
 
-    
+
 
     private IBarcodeReader _barcodeReader = new BarcodeReader
     {
@@ -37,13 +34,14 @@ public class QRCodeDetector : MonoBehaviour
         }
     };
 
-    
+
     private float _frameProcessInterval = 1.0f; //Scans an frame every 1 sec
     private float _lastFrameProcessedTime = 0.0f;
 
 
-    public void SetLastResultNull() {
-        _lastResult = null;   
+    public void SetLastResultNull()
+    {
+        _lastResult = null;
     }
 
     private void OnEnable()
@@ -74,7 +72,7 @@ public class QRCodeDetector : MonoBehaviour
 
         _lastFrameProcessedTime = Time.time;
 
-        
+
 
         // Acquire an XRCpuImage
         if (!m_CameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
@@ -95,8 +93,11 @@ public class QRCodeDetector : MonoBehaviour
 
             // Flip across the vertical axis (mirror image)
             transformation = XRCpuImage.Transformation.MirrorY
+
+           
         };
 
+        
         // See how many bytes we need to store the image  
         int size = image.GetConvertedDataSize(conversionParams);
 
@@ -177,7 +178,7 @@ public class QRCodeDetector : MonoBehaviour
     private Vector2 CalculateQRCodeScreenPosition(Result result, int imageWidth, int imageHeight)
     {
 
-        
+
         var points = result.ResultPoints;
         float x = 0f;
         float y = 0f;
